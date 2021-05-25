@@ -51,11 +51,11 @@ def login(client : amino.Client, email : str, password : str):
     except amino.lib.util.exceptions.YouAreBanned:
         print(f"{email} This Account Banned")
         print(f"{email} Этот Аккаунт Забанили")
-        return None
+        return
     except amino.lib.util.exceptions.VerificationRequired as e:
         print(f"Verification required for {email}")
         print(f"Запрашивается верификация для {email}")
-        link=e.args[0]['url']
+        link = e.args[0]['url']
         print(link)
         input(" > ")
         login(client, email, password)
