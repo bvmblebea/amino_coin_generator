@@ -17,7 +17,7 @@
 - git clone https://github.com/LilZevi/AminoCoinGeneratorBo
 - !Для запуска/For starting!
 - cd AminoCoinGenerator.py
-- python AminoCoinGeneratorBo.py
+- python AminoCoinGenerator.py
 
 # Windows
 - Download python
