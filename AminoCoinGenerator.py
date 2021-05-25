@@ -20,12 +20,15 @@ YouTube: https://www.youtube.com/channel/UCJ61JlXJckmO6yJr8BDRuGQ
 Telegram: @NowNameBo
 ▄▀█ █▀▄▀█ █ █▄░█ █▀█ █▀▀ █▀█ █ █▄░█ █▀▀ █▀▀ █▄░█ █▀▀ █▀█ ▄▀█ ▀█▀ █▀█ █▀█
 █▀█ █░▀░█ █ █░▀█ █▄█ █▄▄ █▄█ █ █░▀█ █▄█ ██▄ █░▀█ ██▄ █▀▄ █▀█ ░█░ █▄█ █▀▄""")
+client = amino.Client()
 THIS_FOLDER = path.dirname(path.abspath(__file__))
 emails = path.join(THIS_FOLDER, 'emails.txt')
 deviceIdfile = path.join(THIS_FOLDER, "device")
 emails = open(emails, "r")
 password = input("Password for accounts/Пароль для аккаунтов: ")
-thecommunityid = input("CommunityId/Айди Сообщества: ")
+communitylink = input("Community Link/Ссылка на сообщество: ")
+communityinfo = client.get_from_code(communitylink)
+thecommunityid = communityinfo.path[1:communityinfo.path.index('/')]
 
 def coinsgenerator(sub_client : amino.SubClient):
 	generatingcoins = {"start": int(time.time()), "end": int(time.time()) +300, "tz": -1430/1440/10}
