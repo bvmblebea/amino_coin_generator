@@ -2,6 +2,7 @@ import amino
 import base64
 import string
 import random
+import pyfiglet
 import json
 import time
 from os import path
@@ -9,12 +10,11 @@ from hashlib import sha1
 from concurrent.futures import ThreadPoolExecutor
 from colorama import init, Fore, Back, Style
 init()
-print(Fore.BLUE)
-print(Style.BRIGHT)
+print(Fore.GREEN)
+print(Style.NORMAL)
 print("""Script by Lil Zevi
-Github : https://github.com/LilZevi
-▄▀█ █▀▄▀█ █ █▄░█ █▀█ █▀▀ █▀█ █ █▄░█ █▀▀ █▀▀ █▄░█ █▀▀ █▀█ ▄▀█ ▀█▀ █▀█ █▀█
-█▀█ █░▀░█ █ █░▀█ █▄█ █▄▄ █▄█ █ █░▀█ █▄█ ██▄ █░▀█ ██▄ █▀▄ █▀█ ░█░ █▄█ █▀▄""")
+Github : https://github.com/LilZevi""")
+print(pyfiglet.figlet_format("AminoCoinGenerator", font="rectangles"))
 client = amino.Client()
 THIS_FOLDER = path.dirname(path.abspath(__file__))
 emails = path.join(THIS_FOLDER, 'emails.txt')
@@ -26,15 +26,23 @@ communityinfo = client.get_from_code(communitylink)
 thecommunityid = communityinfo.path[1:communityinfo.path.index('/')]
 
 def coinsgenerator(sub_client : amino.SubClient):
-	generatingcoins = {"start": int(time.time()), "end": int(time.time()) +300, "tz": -1430/1440/10}
+	generatingcoins = {"start": int(time.time()), "end": int(time.time()) +300}
 	return generatingcoins
 
 def sendingprocces(sub_client : amino.SubClient):
     thetimer = [coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client)]
-    sub_client.send_active_obj(timers=thetimer)
+    for j in range(-1430, 1440, 10):
+        sub_client.send_active_obj(timers=thetimer, tz=j)
+        print(f"Generating coins in {email}")
 
-def lottery(sub_client : amino.SubClient):
-    sub_client.lottery()
+def lottery():
+	try:
+		sub_client.lottery()
+		print(f"{email} Played The Lottery")
+	except amino.lib.util.exceptions.AlreadyPlayedLottery:
+		print(f"{email} Already Played Lottery")
+		return
+
 
 def deviceIdgenerator(st : int = 69):
     ran = ''.join(random.choices(string.ascii_uppercase + string.digits, k = st))
@@ -74,7 +82,6 @@ def login(client : amino.Client, email : str, password : str):
 def coinsgeneratingproccess(client: amino.Client, email : str, password : str, comid: str):
     try:
         sendingprocces(sub_client)
-        print(f"Generating coins in {email}")
     except:
         return
         
@@ -93,8 +100,8 @@ for line in emails:
     deviceIdfile.close()
     client = amino.Client()
     login(client = client, email = email, password = password)
-    client.join_community(communityid)
     sub_client = amino.SubClient(comId = communityid, profile = client.profile)
+    lottery()
     for _ in range(25):
             with ThreadPoolExecutor(max_workers=150) as executor:
                   _ = [executor.submit(coinsgeneratingproccess, client, email, password, communityid)]
