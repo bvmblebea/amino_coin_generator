@@ -13,6 +13,7 @@
 - pip install hashlib
 - pip install colorama
 - pip install amino.py
+- pip install pyfiglet
 - pip install hashlib
 - git clone https://github.com/LilZevi/AminoCoinGeneratorBo
 - !Для запуска/For starting!
