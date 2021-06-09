@@ -31,9 +31,8 @@ def coinsgenerator(sub_client : amino.SubClient):
 
 def sendingprocces(sub_client : amino.SubClient):
     thetimer = [coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client)]
-    for j in range(-1430, 1440, 10):
-        sub_client.send_active_obj(timers=thetimer, tz=j)
-        print(f"Generating coins in {email}")
+    sub_client.send_active_obj(timers=thetimer, tz=j)
+    print(f"Generating coins in {email}")
 
 def lottery():
 	try:
@@ -102,6 +101,6 @@ for line in emails:
     login(client = client, email = email, password = password)
     sub_client = amino.SubClient(comId = communityid, profile = client.profile)
     lottery()
-    for i in range(10):
+    for i in range(20):
             with ThreadPoolExecutor(max_workers=150) as executor:
                   _ = [executor.submit(coinsgeneratingproccess, client, email, password, communityid)]
