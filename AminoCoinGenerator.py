@@ -31,7 +31,7 @@ def coinsgenerator(sub_client : amino.SubClient):
 
 def sendingprocces(sub_client : amino.SubClient):
     thetimer = [coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client), coinsgenerator(sub_client)]
-    sub_client.send_active_obj(timers=thetimer, tz=j)
+    sub_client.send_active_obj(timers=thetimer)
     print(f"Generating coins in {email}")
 
 def lottery():
