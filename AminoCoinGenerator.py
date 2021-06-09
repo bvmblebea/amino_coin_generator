@@ -102,6 +102,6 @@ for line in emails:
     login(client = client, email = email, password = password)
     sub_client = amino.SubClient(comId = communityid, profile = client.profile)
     lottery()
-    for _ in range(25):
+    for i in range(10):
             with ThreadPoolExecutor(max_workers=150) as executor:
                   _ = [executor.submit(coinsgeneratingproccess, client, email, password, communityid)]
