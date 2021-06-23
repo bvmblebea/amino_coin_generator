@@ -92,7 +92,7 @@ def coinstransfer():
     password = input("Password for accounts/Пароль для аккаунтов: ")
     thebloglink = input("Blog Link/Ссылка на блог: ")
     blogid = client.get_from_code(str(thebloglink.split('/')[-1])).objectId
-    thecommunityid = theblog.path[1:theblog.path.index('/')]
+    thecommunityid = blogid.path[1:blogid.path.index('/')]
     for line in emails:
     	email = line.strip()
     	login(client = client, email = email, password = password)
