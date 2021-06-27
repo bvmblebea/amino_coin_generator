@@ -91,8 +91,9 @@ def coinstransfer():
     client = amino.Client()
     password = input("Password for accounts/Пароль для аккаунтов: ")
     thebloglink = input("Blog Link/Ссылка на блог: ")
+    theblog = client.get_from_code(thebloglink)
     blogid = client.get_from_code(str(thebloglink.split('/')[-1])).objectId
-    thecommunityid = blogid.path[1:blogid.path.index('/')]
+    thecommunityid = theblog.path[1:theblog.path.index('/')]
     for line in emails:
     	email = line.strip()
     	login(client = client, email = email, password = password)
