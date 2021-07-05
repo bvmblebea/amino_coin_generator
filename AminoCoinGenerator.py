@@ -10,18 +10,17 @@ from hashlib import sha1
 from concurrent.futures import ThreadPoolExecutor
 from colorama import init, Fore, Back, Style
 init()
-print(Fore.GREEN)
-print(Style.NORMAL)
+print(Fore.GREEN + Style.NORMAL)
 print("""Script by Lil Zevi
 Github : https://github.com/LilZevi""")
-print(pyfiglet.figlet_format("AminoCoinGenerator", font="rectangles"))
+print(pyfiglet.figlet_format("aminocoingenerator", font="rectangles"))
 THIS_FOLDER = path.dirname(path.abspath(__file__))
 emails = path.join(THIS_FOLDER, 'emails.txt')
 deviceIdfile = path.join(THIS_FOLDER, "device")
 emails = open(emails, "r")
-print("""1.Generate Coins
-2.Transfer Coins of All Accounts""")
-theselect = input("Type the Number/Введите цифру: ")
+print("""[1] Generate Coins
+[2] Transfer Coins of All Accounts""")
+theselect = input("Type the Number/Введите цифру >> ")
 
 	#coingenerator functions
 def coinsgenerator(sub_client : amino.SubClient):
@@ -66,12 +65,12 @@ def login(client : amino.Client, email : str, password : str):
 	except amino.lib.util.exceptions.InvalidPassword:
 		print(f"Incorrect password for {email}")
 		print(f"Неверный пароль для {email}")
-		passx = input("Enter correct password > ")
+		passx = input("Enter correct password >> ")
 		login(client, email, passx)
 	except amino.lib.util.exceptions.InvalidAccountOrPassword:
 		print(f"Incorrect password for {email}")
 		print(f"Неверный пароль для {email}")
-		passx = input("Enter correct password > ")
+		passx = input("Enter correct password >> ")
 		login(client, email, passx)
 	except:
 		return
@@ -89,8 +88,8 @@ def coinsgeneratingproccess(client: amino.Client, email : str, password : str, c
 	#coins transfer functions
 def coinstransfer():
     client = amino.Client()
-    password = input("Password for accounts/Пароль для аккаунтов: ")
-    thebloglink = input("Blog Link/Ссылка на блог: ")
+    password = input("Password for accounts/Пароль для аккаунтов >> ")
+    thebloglink = input("Blog Link/Ссылка на блог >> ")
     theblog = client.get_from_code(thebloglink)
     blogid = client.get_from_code(str(thebloglink.split('/')[-1])).objectId
     thecommunityid = theblog.path[1:theblog.path.index('/')]
@@ -120,31 +119,33 @@ def coinstransfer():
     	except:
     		return
 	
-if theselect == "1":
-    client = amino.Client()
-    password = input("Password for accounts/Пароль для аккаунтов: ")
-    communitylink = input("Community Link/Ссылка на сообщество: ")
-    communityinfo = client.get_from_code(communitylink)
-    thecommunityid = communityinfo.path[1:communityinfo.path.index('/')]
+def coinsgeneratingstart():
+	client = amino.Client()
+	password = input("Password for accounts/Пароль для аккаунтов >> ")
+	communitylink = input("Community Link/Ссылка на сообщество >> ")
+	communityinfo = client.get_from_code(communitylink)
+	thecommunityid = communityinfo.path[1:communityinfo.path.index('/')]
+	
+	for line in emails:
+		email = line.strip()
+		device = deviceIdgenerator()
+		thedevicejs = {
+		"device_id": f"{device}",
+		"device_id_sig": "Aa0ZDPOEgjt1EhyVYyZ5FgSZSqJt",
+		"user_agent": "Dalvik/2.1.0 (Linux; U; Android 5.1.1; SM-G973N Build/beyond1qlteue-user 5; com.narvii.amino.master/3.4.33562)"
+		}
+		deviceIdfile = open('device.json', "w")
+		json.dump(thedevicejs, deviceIdfile)
+		deviceIdfile.close()
+		login(client=client, email=email, password=password)
+		sub_client = amino.SubClient(comId=thecommunityid, profile=client.profile)
+		lottery()
+		for i in range(20):
+			with ThreadPoolExecutor(max_workers=125) as executor:
+				_ = [executor.submit(coinsgeneratingproccess, client, email, password, communityid)]
 
-    for line in emails:
-        email = line.strip()
-        communityid = thecommunityid
-        device = deviceIdgenerator()
-        thedevicejs = {
-        "device_id": f"{device}",
-        "device_id_sig": "Aa0ZDPOEgjt1EhyVYyZ5FgSZSqJt",
-        "user_agent": "Dalvik/2.1.0 (Linux; U; Android 5.1.1; SM-G973N Build/beyond1qlteue-user 5; com.narvii.amino.master/3.4.33562)"
-        }
-        deviceIdfile = open('device.json', "w")
-        json.dump(thedevicejs, deviceIdfile)
-        deviceIdfile.close()
-        login(client = client, email = email, password = password)
-        sub_client = amino.SubClient(comId=communityid, profile = client.profile)
-        lottery()
-        for i in range(20):
-            with ThreadPoolExecutor(max_workers=150) as executor:
-                 _ = [executor.submit(coinsgeneratingproccess, client, email, password, communityid)]
+if theselect == "1":
+    coinsgeneratingstart()
 
 elif theselect == "2":
 	coinstransfer()
