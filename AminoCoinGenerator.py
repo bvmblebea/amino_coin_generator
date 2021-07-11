@@ -32,7 +32,7 @@ def sendingprocces(sub_client : amino.SubClient):
 	sub_client.send_active_obj(timers=thetimer)
 	print(f"Generating coins in {email}")
 
-def lottery():
+def lottery(sub_client : amino.SubClient):
 	try:
 		sub_client.lottery()
 		print(f"{email} Played The Lottery")
@@ -139,7 +139,7 @@ def coinsgeneratingstart():
 		deviceIdfile.close()
 		login(client=client, email=email, password=password)
 		sub_client = amino.SubClient(comId=thecommunityid, profile=client.profile)
-		lottery()
+		lottery(sub_client)
 		for i in range(20):
 			with ThreadPoolExecutor(max_workers=125) as executor:
 				_ = [executor.submit(coinsgeneratingproccess, client, email, password, communityid)]
