@@ -43,6 +43,39 @@ def lottery():
 		print(f"{email} Already Played Lottery")
 		return
 
+#coins transfer functions
+def coinstransfer():
+    client = amino.Client()
+    password = input("Password for all accounts >> ")
+    thebloglink = input("Blog Link >> ")
+    theblog = client.get_from_code(thebloglink)
+    blogid = client.get_from_code(str(thebloglink.split('/')[-1])).objectId
+    thecommunityid = theblog.path[1:theblog.path.index('/')]
+    for line in emails:
+    	email = line.strip()
+    	login(client = client, email = email, password = password)
+    	sub_client = amino.SubClient(comId=thecommunityid, profile=client.profile)
+    	try:
+    	   	coins = int(client.get_wallet_info().totalCoins)
+    	   	print(f"{email} have {coins} coins")
+    	   	if coins != 0:
+    	   	   sub_client.send_coins(coins=coins, blogId=blogid)
+    	   	   print(f"{email} Transfered {coins} coins")
+    	except amino.lib.util.exceptions.NotEnoughCoins:
+    	   	print(f"{email} Not Enough Coins")
+    	   	return
+    	except amino.lib.util.exceptions.InvalidRequest:
+    	   	print("InvalidRequest")
+    	   	return
+    	except amino.lib.util.exceptions.YouAreBanned:
+    	   	print(f"{email} This Account Banned")
+    	   	return
+    	except amino.lib.util.exceptions.InvalidSession:
+    	   	print(f"{email} InvalidSession")
+    	   	return
+    	except:
+    		return
+
 if theselect == "1":
     client = amino.Client()
     password = input("Password for all accounts >> ")
@@ -69,4 +102,4 @@ if theselect == "1":
                  _ = [executor.submit(coinsgeneratingproccess, client, email, password, communityid)]
 
 elif theselect == "2":
-	coingeneratorfunctions.coinstransfer()
+	coinstransfer()
