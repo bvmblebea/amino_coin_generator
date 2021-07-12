@@ -53,7 +53,7 @@ def coinstransfer():
     thecommunityid = theblog.path[1:theblog.path.index('/')]
     for line in emails:
     	email = line.strip()
-    	login(client = client, email = email, password = password)
+    	coingeneratorfunctions.login(client = client, email = email, password = password)
     	sub_client = amino.SubClient(comId=thecommunityid, profile=client.profile)
     	try:
     	   	coins = int(client.get_wallet_info().totalCoins)
