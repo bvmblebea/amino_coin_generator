@@ -10,7 +10,6 @@
 - apt update -y
 - apt upgrade -y
 - pkg install python
-- pip install hashlib
 - pip install colorama
 - pip install amino.py==1.2.17
 - pip install pyfiglet
