@@ -13,7 +13,7 @@
 - pip install colorama
 - pip install amino.py==1.2.17
 - pip install pyfiglet
-- git clone https://github.com/LilZevi/AminoCoinGeneratorBo
+- git clone https://github.com/deluvsushi/AminoCoinGeneratorBo
 - !Для запуска/For starting!
 - cd AminoCoinGenerator.py
 - python AminoCoinGenerator.py
