@@ -8,8 +8,8 @@ from concurrent.futures import ThreadPoolExecutor
 from colorama import init, Fore, Back, Style
 init()
 print(Fore.GREEN + Style.NORMAL)
-print("""Script by Lil Zevi
-Github : https://github.com/LilZevi""")
+print("""Script by deluvsushi
+Github : https://github.com/deluvsushi""")
 print(pyfiglet.figlet_format("aminocoingenerator", font="rectangles"))
 THIS_FOLDER = path.dirname(path.abspath(__file__))
 emails = path.join(THIS_FOLDER, 'emails.txt')
