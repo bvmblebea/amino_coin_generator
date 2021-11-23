@@ -1,0 +1,9 @@
+AminoLab
+amino.fix
+tabulate
+sty
+pyfiglet
+names
+secmail
+requests
+bs4
