@@ -11,12 +11,10 @@
 - apt update -y
 - apt upgrade -y
 - pkg install python
-- pip install AminoLab && pip install amino.fix
-- pip install sty && pip install tabulate
-- pip install pyfiglet
 - git clone https://github.com/deluvsushi/AminoCoinGeneratorBo
 - !Для запуска/For starting!
 - cd AminoCoinGeneratorBo.py
+- pip install -r requirements.txt
 - python AminoCoinGeneratorBo.py
 
 # Windows
