@@ -1,5 +1,6 @@
 # AminoCoinGeneratorBo
-# `AminoCoinGenerator. CoinGenerator for AminoApps/Генератор монет для амино`
+### `AminoCoinGenerator. CoinGenerator for AminoApps/Генератор монет для амино`
+
 # Using/Использование
 ### Rus
 - Для генерации нужны аккаунты. 1 Аккаунт = 97 монет в день. Надо чтобы у всех аккаунтов был один пароль Это обязательно! Почты от аккаунтов надо поместить в текстовый документ emails.txt создайте его сами. Дальше запускаете генератор и генерируете. Монеты приходят в 12 GMT точнее через один день.
@@ -10,13 +11,13 @@
 - apt update -y
 - apt upgrade -y
 - pkg install python
-- pip install colorama
-- pip install amino.py==1.2.17
+- pip install AminoLab && pip install amino.fix
+- pip install sty && pip install tabulate
 - pip install pyfiglet
 - git clone https://github.com/deluvsushi/AminoCoinGeneratorBo
 - !Для запуска/For starting!
-- cd AminoCoinGenerator.py
-- python AminoCoinGenerator.py
+- cd AminoCoinGeneratorBo.py
+- python AminoCoinGeneratorBo.py
 
 # Windows
 - Download python
