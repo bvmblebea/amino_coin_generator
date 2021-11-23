@@ -53,7 +53,7 @@ def play_lottery(sub_client: aminofix.SubClient, email: str):
 def transfer_coins():
     password = input("Password For All Accounts >> ")
     link_Info = client.get_from_code(input("Blog Link >> "))
-    com_Id = link_Info.comId; blog_Id = link_Info.blogId
+    com_Id = link_Info.comId; blog_Id = link_Info.objectId
     for line in accounts:
     	email = line.strip(); auth(email=email, password=password)
     	sub_client = aminofix.SubClient(comId=com_Id, profile=client.profile)
