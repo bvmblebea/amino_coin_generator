@@ -58,7 +58,7 @@ def transfer_coins():
     	email = line.strip(); auth(email=email, password=password)
     	sub_client = aminofix.SubClient(comId=com_Id, profile=client.profile)
     	try:
-    		total_coins = int(client.get_wallet_info().totalCoins())
+    		total_coins = int(client.get_wallet_info().totalCoins)
     		print(f">> {email} have {total_coins} coins...")
     		if coins != 0:
     			sub_client.send_coins(coins=total_coins, blogId=blog_Id)
