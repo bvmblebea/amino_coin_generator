@@ -60,7 +60,7 @@ def transfer_coins():
     	try:
     		total_coins = int(client.get_wallet_info().totalCoins)
     		print(f">> {email} have {total_coins} coins...")
-    		if coins != 0:
+    		if total_coins != 0:
     			sub_client.send_coins(coins=total_coins, blogId=blog_Id)
     			print(f">> {email} transfered {total_coins} coins...")
     	except aminofix.lib.util.exceptions.NotEnoughCoins:
