@@ -1,92 +1,76 @@
-import aminofix
 import concurrent.futures
-from time import time
 from . import menu_configs, autoreg_functions
+from time import time
+from library import aminoboi
 from tabulate import tabulate
 
 accounts = open("emails.txt", "r")
-client = aminofix.Client()
+client = aminoboi.Client()
 
 		# -- coin generator functions --
 
+
 def auth(email: str, password: str):
 	try:
-		client.login(email=email, password=password)
+		client.auth(email=email, password=password)
 		print(f">> Logged in {email}...")
-	except aminofix.lib.util.exceptions.YouAreBanned:
-		print(f">> Error - {email} This Account Banned...")
-	except aminofix.lib.util.exceptions.VerificationRequired as e:
-		print(">> Error - VerificationRequired...")
-		verification_link = e.args[0]["url"]
-		print(f"Verification Link >> {verification_link}")
-		verification = input("Waiting for verification >> ")
-	except aminofix.lib.util.exceptions.InvalidPassword:
-		print(f">> Error - Incorrect password {email}")
-		auth(email=email, password=input("Enter correct password >> "))
 	except Exception as e:
-		print(f">> Error In Auth - {e}")
+		print(f">> Error in Auth {e}")
         
-def coin_generator(sub_client: aminofix.SubClient):
+def coin_generator():
 	send_active_object = {"start": int(time()), "end": int(time()) +300}
 	return send_active_object
 
-def generator_main_process(sub_client: aminofix.SubClient, email: str):
-	timers = [coin_generator(sub_client=sub_client) for _ in range(50)]
-	sub_client.send_active_obj(timers=timers)
+def generator_main_process(ndc_Id: int, email: str):
+	timers = [coin_generator() for _ in range(50)]
+	client.send_active_object(ndc_Id=ndc_Id, timers=timers)
 	print(f">> Generating coins in {email}...")
 
-def generating_process(sub_client: aminofix.SubClient, email: str):
+def generating_process(ndc_Id: int, email: str):
+	generator_main_process(ndc_Id=ndc_Id, email=email)
+
+def play_lottery(ndc_Id: int):
 	try:
-		generator_main_process(sub_client=sub_client, email=email)
+		lottery = client.lottery(ndc_Id=ndc_Id)
+		print(f">> Lottery - {lottery['api:message']}")
 	except Exception as e:
-		print(f">> Error in generating process - {e}")
-
-def play_lottery(sub_client: aminofix.SubClient, email: str):
+		print(f">> Error in play lottery - {e}")
+		
+def watch_ad():
 	try:
-		sub_client.lottery()
-		print(f">> {email} Played The Lottery...")
-	except aminofix.lib.util.exceptions.AlreadyPlayedLottery:
-		print(f">> Error - {email} Already Played Lottery...")
-
+		watch_ad = client.watch_ad()
+		print(f">> Watch Ad - {watch_ad['api:message']}")
+	except Exception as e:
+		print(f">> Error in watch ad - {e}")
+		
 		# -- transfer coins and main function for generating coins -- 
 		
 def transfer_coins():
     password = input("Password For All Accounts >> ")
-    link_Info = client.get_from_code(input("Blog Link >> "))
-    com_Id = link_Info.comId; blog_Id = link_Info.objectId
+    link_Info = client.get_from_link(input("Blog Link >> "))["linkInfoV2"]
+    ndc_Id = link_Info["extensions"]["linkInfo"]["ndcId"]; blog_Id = link_Info["extensions"]["linkInfo"]["objectId"]
     for line in accounts:
     	email = line.strip(); auth(email=email, password=password)
-    	sub_client = aminofix.SubClient(comId=com_Id, profile=client.profile)
     	try:
-    		total_coins = int(client.get_wallet_info().totalCoins)
+    		total_coins = client.get_wallet_info()["wallet"]["totalCoins"]
     		print(f">> {email} have {total_coins} coins...")
     		if total_coins != 0:
-    			sub_client.send_coins(coins=total_coins, blogId=blog_Id)
-    			print(f">> {email} transfered {total_coins} coins...")
-    	except aminofix.lib.util.exceptions.NotEnoughCoins:
-    		print(f">> Error - {email} Not Enough Coins...")
-    	except aminofix.lib.util.exceptions.YouAreBanned:
-    		print(f">> Error - {email} This Account Banned...")
-    	except aminofix.lib.util.exceptions.InvalidSession:
-    		print(f">> Error - {email} InvalidSession...")
+    			transfer = client.send_coins_blog(ndc_Id=ndc_Id, blog_Id=blog_Id, coins=total_coins)
+    			print(f">> {email} transfered {total_coins} coins - {transfer['api:message']}...")
     	except Exception as e:
     		print(f">> Error In Transfer Coins - {e}")
 
 def main_process():
     password = input("Password For All Accounts >> ")
-    link_Info = client.get_from_code(input("Community Link >> "))
-    com_Id = link_Info.json["extensions"]["community"]["ndcId"]
+    link_Info = client.get_from_link(input("Community Link >> "))
+    ndc_Id = link_Info["linkInfoV2"]["extensions"]["community"]["ndcId"]
     for line in accounts:
     	try:
     		email = line.strip(); auth(email=email, password=password)
-    		sub_client = aminofix.SubClient(comId=com_Id, profile=client.profile)
-    		play_lottery(sub_client=sub_client, email=email)
-    		for i in range(20):
-    			with concurrent.futures.ThreadPoolExecutor(max_workers=100) as executor: 
-    				_ = [executor.submit(generating_process(sub_client, email))]
-    	except aminofix.lib.util.exceptions.UserNotMemberOfCommunity:
-    		client.join_community(comId=com_Id)
-    		return
+    		play_lottery(ndc_Id=ndc_Id); watch_ad()
+    		with concurrent.futures.ThreadPoolExecutor(max_workers=100) as executor: 
+    			_ = [executor.submit(generating_process(ndc_Id, email)) for _ in range(20)]
+    		print(f"-- Finished Generating Coins In {email}")
     	except Exception as e:
     		print(f">> Error in main process - {e}")
 
@@ -105,3 +89,4 @@ def main():
 	
 	elif select == "3":
 		autoreg_functions.auto_register(password=input("Password For All Accounts >> "))
+	
