@@ -1,7 +1,7 @@
 import concurrent.futures
 from . import menu_configs, autoreg_functions
+from .library import aminoboi
 from time import time
-from library import aminoboi
 from tabulate import tabulate
 
 accounts = open("emails.txt", "r")
