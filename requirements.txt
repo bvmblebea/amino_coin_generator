@@ -1,5 +1,4 @@
 AminoLab
-amino.fix
 tabulate
 sty
 pyfiglet
