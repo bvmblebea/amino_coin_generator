@@ -80,7 +80,7 @@ def main_process():
     		auth(email=email, password=password, client=client)
     		play_lottery(ndc_Id=ndc_Id, client=client); watch_ad(client=client)
     		with ThreadPoolExecutor(max_workers=100) as executor: 
-    			_ = [executor.submit(generating_process(ndc_Id, email, client)) for _ in range(20)]
+    			_ = [executor.submit(generating_process(ndc_Id, email, client)) for _ in range(25)]
     		print(f"-- Finished Generating Coins In {email}")
     	except Exception as e:
     		print(f">> Error in main process - {e}")
