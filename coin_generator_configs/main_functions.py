@@ -1,16 +1,20 @@
+import requests
 import concurrent.futures
 from . import menu_configs, autoreg_functions
-from .library import aminoboi
 from time import time
+from .library import aminoboi
 from tabulate import tabulate
 
 accounts = open("emails.txt", "r")
-client = aminoboi.Client()
+
+def device_Id_generator():
+	try:	return requests.get("https://aminohub.sirlez.repl.co/deviceId").text
+	except:	device_Id_generator()
 
 		# -- coin generator functions --
 
 
-def auth(email: str, password: str):
+def auth(email: str, password: str, client: aminoboi.Client):
 	try:
 		client.auth(email=email, password=password)
 		print(f">> Logged in {email}...")
@@ -21,22 +25,22 @@ def coin_generator():
 	send_active_object = {"start": int(time()), "end": int(time()) +300}
 	return send_active_object
 
-def generator_main_process(ndc_Id: int, email: str):
+def generator_main_process(ndc_Id: int, email: str, client: aminoboi.Client):
 	timers = [coin_generator() for _ in range(50)]
 	client.send_active_object(ndc_Id=ndc_Id, timers=timers)
 	print(f">> Generating coins in {email}...")
 
-def generating_process(ndc_Id: int, email: str):
-	generator_main_process(ndc_Id=ndc_Id, email=email)
+def generating_process(ndc_Id: int, email: str, client: aminoboi.Client):
+	generator_main_process(ndc_Id=ndc_Id, email=email, client=client)
 
-def play_lottery(ndc_Id: int):
+def play_lottery(ndc_Id: int, client: aminoboi.Client):
 	try:
 		lottery = client.lottery(ndc_Id=ndc_Id)
 		print(f">> Lottery - {lottery['api:message']}")
 	except Exception as e:
 		print(f">> Error in play lottery - {e}")
 		
-def watch_ad():
+def watch_ad(client: aminoboi.Client):
 	try:
 		watch_ad = client.watch_ad()
 		print(f">> Watch Ad - {watch_ad['api:message']}")
@@ -47,11 +51,12 @@ def watch_ad():
 		
 def transfer_coins():
     password = input("Password For All Accounts >> ")
-    link_Info = client.get_from_link(input("Blog Link >> "))["linkInfoV2"]
+    link_Info = aminoboi.Client().get_from_link(input("Blog Link >> "))["linkInfoV2"]
     ndc_Id = link_Info["extensions"]["linkInfo"]["ndcId"]; blog_Id = link_Info["extensions"]["linkInfo"]["objectId"]
     for line in accounts:
-    	email = line.strip(); auth(email=email, password=password)
     	try:
+    		client = aminoboi.Client(device_Id=device_Id_generator())
+    		email = line.strip(); auth(email=email, password=password, client=client)
     		total_coins = client.get_wallet_info()["wallet"]["totalCoins"]
     		print(f">> {email} have {total_coins} coins...")
     		if total_coins != 0:
@@ -62,14 +67,15 @@ def transfer_coins():
 
 def main_process():
     password = input("Password For All Accounts >> ")
-    link_Info = client.get_from_link(input("Community Link >> "))
+    link_Info = aminoboi.Client().get_from_link(input("Community Link >> "))
     ndc_Id = link_Info["linkInfoV2"]["extensions"]["community"]["ndcId"]
     for line in accounts:
     	try:
-    		email = line.strip(); auth(email=email, password=password)
-    		play_lottery(ndc_Id=ndc_Id); watch_ad()
+    		client = aminoboi.Client(device_Id=device_Id_generator())
+    		email = line.strip(); auth(email=email, password=password, client=client)
+    		play_lottery(ndc_Id=ndc_Id, client=client); watch_ad(client=client)
     		with concurrent.futures.ThreadPoolExecutor(max_workers=100) as executor: 
-    			_ = [executor.submit(generating_process(ndc_Id, email)) for _ in range(20)]
+    			_ = [executor.submit(generating_process(ndc_Id, email, client)) for _ in range(20)]
     		print(f"-- Finished Generating Coins In {email}")
     	except Exception as e:
     		print(f">> Error in main process - {e}")
