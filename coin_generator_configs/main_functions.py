@@ -36,7 +36,7 @@ def generator_main_process(ndc_Id: int, email: str, client: aminoboi.Client):
 	print(f">> Generating coins in {email}...")
 
 def generating_process(ndc_Id: int, email: str, client: aminoboi.Client):
-	Thread(target=generator_main_process, args=(ndc_Id, email, client)).start()
+	Thread(target=generator_main_process, args=(ndc_Id, email, client).start())
 
 def play_lottery(ndc_Id: int, client: aminoboi.Client):
 	try:
