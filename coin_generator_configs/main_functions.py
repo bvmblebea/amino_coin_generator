@@ -1,18 +1,23 @@
-import requests
-import concurrent.futures
-from . import menu_configs, autoreg_functions
 from time import time
-from .library import aminoboi
+from json import load
+from requests import get
+from threading import Thread
 from tabulate import tabulate
+from .library import aminoboi
+from concurrent.futures import ThreadPoolExecutor
+from . import menu_configs, autoreg_functions
 
-accounts = open("emails.txt", "r")
-
-def device_Id_generator():
-	try:	return requests.get("https://aminohub.sirlez.repl.co/deviceId").text
-	except:	device_Id_generator()
+accounts = [ ]
+with open("accounts.json") as data:
+	accounts_list = load(data)
+	for account in accounts_list:
+		accounts.append(account)
 
 		# -- coin generator functions --
-
+		
+def device_Id_generator():
+	try:	return get("https://aminohub.sirlez.repl.co/deviceId").text
+	except:	device_Id_generator()
 
 def auth(email: str, password: str, client: aminoboi.Client):
 	try:
@@ -27,7 +32,7 @@ def coin_generator():
 
 def generator_main_process(ndc_Id: int, email: str, client: aminoboi.Client):
 	timers = [coin_generator() for _ in range(50)]
-	client.send_active_object(ndc_Id=ndc_Id, timers=timers)
+	Thread(target=client.send_active_object, args=(ndc_Id, timers)).start()
 	print(f">> Generating coins in {email}...")
 
 def generating_process(ndc_Id: int, email: str, client: aminoboi.Client):
@@ -50,13 +55,13 @@ def watch_ad(client: aminoboi.Client):
 		# -- transfer coins and main function for generating coins -- 
 		
 def transfer_coins():
-    password = input("Password For All Accounts >> ")
     link_Info = aminoboi.Client().get_from_link(input("Blog Link >> "))["linkInfoV2"]
     ndc_Id = link_Info["extensions"]["linkInfo"]["ndcId"]; blog_Id = link_Info["extensions"]["linkInfo"]["objectId"]
-    for line in accounts:
+    for account in accounts:
+    	email = account["email"]; password = account["password"]
     	try:
     		client = aminoboi.Client(device_Id=device_Id_generator())
-    		email = line.strip(); auth(email=email, password=password, client=client)
+    		auth(email=email, password=password, client=client)
     		total_coins = client.get_wallet_info()["wallet"]["totalCoins"]
     		print(f">> {email} have {total_coins} coins...")
     		if total_coins != 0:
@@ -66,22 +71,22 @@ def transfer_coins():
     		print(f">> Error In Transfer Coins - {e}")
 
 def main_process():
-    password = input("Password For All Accounts >> ")
     link_Info = aminoboi.Client().get_from_link(input("Community Link >> "))
     ndc_Id = link_Info["linkInfoV2"]["extensions"]["community"]["ndcId"]
-    for line in accounts:
+    for account in accounts:
+    	email = account["email"]; password = account["password"]
     	try:
     		client = aminoboi.Client(device_Id=device_Id_generator())
-    		email = line.strip(); auth(email=email, password=password, client=client)
+    		auth(email=email, password=password, client=client)
     		play_lottery(ndc_Id=ndc_Id, client=client); watch_ad(client=client)
-    		with concurrent.futures.ThreadPoolExecutor(max_workers=100) as executor: 
+    		with ThreadPoolExecutor(max_workers=100) as executor: 
     			_ = [executor.submit(generating_process(ndc_Id, email, client)) for _ in range(20)]
     		print(f"-- Finished Generating Coins In {email}")
     	except Exception as e:
     		print(f">> Error in main process - {e}")
 
            
-		# -- transfer coins and main function for generating coins -- 
+		# -- transfer coins and main function for generating coins --      
 
 def main():
 	print(tabulate(menu_configs.main_menu, tablefmt="psql"))
@@ -95,4 +100,3 @@ def main():
 	
 	elif select == "3":
 		autoreg_functions.auto_register(password=input("Password For All Accounts >> "))
-	
