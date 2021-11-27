@@ -32,11 +32,11 @@ def coin_generator():
 
 def generator_main_process(ndc_Id: int, email: str, client: aminoboi.Client):
 	timers = [coin_generator() for _ in range(50)]
-	Thread(target=client.send_active_object, args=(ndc_Id, timers)).start()
+	client.send_active_object(ndc_Id=ndc_Id, timers=timers)
 	print(f">> Generating coins in {email}...")
 
 def generating_process(ndc_Id: int, email: str, client: aminoboi.Client):
-	generator_main_process(ndc_Id=ndc_Id, email=email, client=client)
+	Thread(target=generator_main_process, args=(ndc_Id, email, client).start()
 
 def play_lottery(ndc_Id: int, client: aminoboi.Client):
 	try:
