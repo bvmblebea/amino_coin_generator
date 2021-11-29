@@ -1036,3 +1036,13 @@ class Client:
             headers=self.headers,
             proxies=self.proxy)
         return request.json()
+
+
+    def get_tapjoy_reward(self, user_Id: str = None, repeat: int = 200):
+    	if not user_Id: user_Id = self.auid
+    	data = {
+    	"userId": user_Id,
+    	"repeat": str(repeat) 
+    	}
+    	request = requests.post(f"https://samino.sirlez.repl.co/api/tapjoy", json=data)
+    	return request.text
