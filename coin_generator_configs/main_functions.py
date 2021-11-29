@@ -4,8 +4,8 @@ from requests import get
 from threading import Thread
 from tabulate import tabulate
 from .library import aminoboi
-from concurrent.futures import ThreadPoolExecutor
 from . import menu_configs, autoreg_functions
+from concurrent.futures import ThreadPoolExecutor
 
 accounts = [ ]
 with open("accounts.json") as data:
@@ -51,8 +51,14 @@ def watch_ad(client: aminoboi.Client):
 		print(f">> Watch Ad - {watch_ad['api:message']}")
 	except Exception as e:
 		print(f">> Error in watch ad - {e}")
-		
 		# -- transfer coins and main function for generating coins -- 
+
+def get_tapjoy_reward(client: aminoboi.Client):
+	try:
+		tapjoy_reward = client.get_tapjoy_reward()
+		print(f">> Tapjoy Reward - {tapjoy_reward}")
+	except Exception as e:
+		print(f">> Error in get tapjoy reward - {e}")
 		
 def transfer_coins():
     link_Info = aminoboi.Client().get_from_link(input("Blog Link >> "))["linkInfoV2"]
@@ -78,7 +84,7 @@ def main_process():
     	try:
     		client = aminoboi.Client(device_Id=device_Id_generator())
     		auth(email=email, password=password, client=client)
-    		play_lottery(ndc_Id=ndc_Id, client=client); watch_ad(client=client)
+    		play_lottery(ndc_Id=ndc_Id, client=client); watch_ad(client=client); get_tapjoy_reward(client=client)
     		with ThreadPoolExecutor(max_workers=100) as executor: 
     			_ = [executor.submit(generating_process(ndc_Id, email, client)) for _ in range(25)]
     		print(f"-- Finished Generating Coins In {email}")
