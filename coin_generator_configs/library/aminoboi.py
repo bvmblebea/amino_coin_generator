@@ -6,7 +6,6 @@ import base64
 import random
 import requests
 from uuid import uuid4
-from utils import objects
 from typing import BinaryIO
 from json_minify import json_minify
 from locale import getdefaultlocale as locale
@@ -163,8 +162,8 @@ class Client:
 
 	# get joined communities list
 	def my_communities(self, start: int = 0, size: int = 25):
-		request = requests.get(f"{self.api}/g/s/community/joined?start={start}&size={size}&sid={self.sid}", headers=self.headers, proxies=self.proxy).json()
-		return objects.CommunityList(request["communityList"]).CommunityList
+		request = requests.get(f"{self.api}/g/s/community/joined?start={start}&size={size}&sid={self.sid}", headers=self.headers, proxies=self.proxy)
+		return request.json()
 
 	# watch ad
 	def watch_ad(self):
@@ -339,13 +338,13 @@ class Client:
 
 	# get joined threads(chats) list
 	def my_chat_threads(self, ndc_Id, start: int = 0, size: int = 25):
-		request = requests.get(f"{self.api}/x{ndc_Id}/s/chat/thread?type=joined-me&start={start}&size={size}&sid={self.sid}", headers=self.headers, proxies=self.proxy).json()
-		return objects.ChatThreads(request["threadList"]).ChatThreads
+		request = requests.get(f"{self.api}/x{ndc_Id}/s/chat/thread?type=joined-me&start={start}&size={size}&sid={self.sid}", headers=self.headers, proxies=self.proxy)
+		return request.json()
 
 	# get public chats list
 	def get_public_chat_threads(self, ndc_Id, start: int = 0, size: int = 10):
-		request = requests.get(f"{self.api}/chat/live-threads?ndcId=x{ndc_Id}&start={start}&size={size}", headers=self.headers).json()
-		return objects.ChatThreads(request["threadList"]).ChatThreads
+		request = requests.get(f"{self.api}/chat/live-threads?ndcId=x{ndc_Id}&start={start}&size={size}", headers=self.headers)
+		return request.json()
 
 	# thank tip
 	def thank_tip(self, ndc_Id, thread_Id: str, user_Id: str):
@@ -395,13 +394,13 @@ class Client:
 
 	# get online users
 	def get_online_members(self, ndc_Id, start: int = 0, size: int = 25):
-		request = requests.get(f"{self.api}/x{ndc_Id}/s/live-layer?topic=ndtopic:x{ndc_Id}:online-members&start={start}&size={size}&sid={self.sid}", headers=self.headers, proxies=self.proxy).json()
-		return objects.MembersList(request["userProfileList"]).MembersList
+		request = requests.get(f"{self.api}/x{ndc_Id}/s/live-layer?topic=ndtopic:x{ndc_Id}:online-members&start={start}&size={size}&sid={self.sid}", headers=self.headers, proxies=self.proxy)
+		return request.json()
 	
 	# get recent users
 	def get_recent_members(self, ndc_Id: str, start: int = 0, size: int = 25):
-		request = requests.get(f"{self.api}/x{ndc_Id}/s/user-profile?type=recent&start={start}&size={size}", headers=self.headers).json()
-		return objects.MembersList(request["userProfileList"]).MembersList
+		request = requests.get(f"{self.api}/x{ndc_Id}/s/user-profile?type=recent&start={start}&size={size}", headers=self.headers)
+		return request.json()
 	
 	# leave chat
 	def leave_thread(self, ndc_Id, thread_Id: str):
@@ -427,8 +426,8 @@ class Client:
 		
 	# get from link
 	def get_from_link(self, link: str):
-		request = requests.get(f"{self.api}/g/s/link-resolution?q={link}", headers=self.headers, proxies=self.proxy).json()
-		return objects.FromLink(request["linkInfoV2"]).FromLink
+		request = requests.get(f"{self.api}/g/s/link-resolution?q={link}", headers=self.headers, proxies=self.proxy)
+		return request.json()
 	
 	# get user blogs
 	def get_user_blogs(self, ndc_Id, user_Id: str, start: int = 0, size: int = 25):
