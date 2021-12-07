@@ -1,6 +1,6 @@
 from time import time
 from json import load
-from requests import get
+from random import choice
 from threading import Thread
 from tabulate import tabulate
 from .library import aminoboi
@@ -16,8 +16,9 @@ with open("accounts.json") as data:
 		# -- coin generator functions --
 		
 def device_Id_generator():
-	try:	return get("https://aminohub.sirlez.repl.co/deviceId").text
-	except:	device_Id_generator()
+	device_Ids = open("device_Ids.txt").readlines()
+	device_Id = choice(device_Ids).strip()
+	return device_Id
 
 def auth(email: str, password: str, client: aminoboi.Client):
 	try:
@@ -68,6 +69,7 @@ def transfer_coins():
     	try:
     		client = aminoboi.Client(device_Id=device_Id_generator())
     		auth(email=email, password=password, client=client)
+    		client.join_community(ndc_Id=ndc_Id)
     		total_coins = client.get_wallet_info()["wallet"]["totalCoins"]
     		print(f">> {email} have {total_coins} coins...")
     		if total_coins != 0:
