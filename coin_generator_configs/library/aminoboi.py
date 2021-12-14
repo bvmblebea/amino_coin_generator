@@ -33,7 +33,7 @@ class Client:
 	
 	def generate_signature(self, data):
 		try:
-			signature = requests.get(f"http://3ee3-93-171-214-239.ngrok.io/signature/{data}").text
+			signature = requests.get(f"https://emerald-dream.herokuapp.com/signature/{data}").json()["signature"]
 			self.headers["NDC-MSG-SIG"] = signature
 			return signature
 		except:
