@@ -15,11 +15,6 @@ with open("accounts.json") as data:
 
 		# -- coin generator functions --
 		
-def device_Id_generator():
-	device_Ids = open("device_Ids.txt").readlines()
-	device_Id = choice(device_Ids).strip()
-	return device_Id
-
 def auth(email: str, password: str, client: aminoboi.Client):
 	try:
 		client.auth(email=email, password=password)
@@ -67,7 +62,7 @@ def transfer_coins():
     for account in accounts:
     	email = account["email"]; password = account["password"]
     	try:
-    		client = aminoboi.Client(device_Id=device_Id_generator())
+    		client = aminoboi.Client()
     		auth(email=email, password=password, client=client)
     		client.join_community(ndc_Id=ndc_Id)
     		total_coins = client.get_wallet_info()["wallet"]["totalCoins"]
@@ -84,7 +79,7 @@ def main_process():
     for account in accounts:
     	email = account["email"]; password = account["password"]
     	try:
-    		client = aminoboi.Client(device_Id=device_Id_generator())
+    		client = aminoboi.Client()
     		auth(email=email, password=password, client=client)
     		play_lottery(ndc_Id=ndc_Id, client=client); watch_ad(client=client); get_tapjoy_reward(client=client)
     		with ThreadPoolExecutor(max_workers=100) as executor: 
