@@ -12,9 +12,9 @@ from locale import getdefaultlocale as locale
 
 
 class Client:
-	def __init__(self, device_Id: str = "32DB0120CBB3C3FDC585A637104CBFBDB10D1D3F93158049AE921DA40A88318DB3DDEA6BCD9F9A31C7", proxy: dict = None):
+	def __init__(self, device_Id: str = None, proxy: dict = None):
+		self.device_Id = self.generate_device_Id() if not device_Id else device_Id
 		self.api = "https://service.narvii.com/api/v1"
-		self.device_Id = device_Id
 		self.proxy = proxy
 		self.headers = {
 		"NDCDEVICEID": self.device_Id,
@@ -30,16 +30,19 @@ class Client:
 
 	# Generate NDC-MSG-SIG 
 	
-	
-	def generate_signature(self, data):
+	def generate_signature(self, data: str):
 		try:
-			signature = requests.get(f"https://emerald-dream.herokuapp.com/signature/{data}").json()["signature"]
+			signature = requests.get(f"https://ed-server.herokuapp.com/api/generator/ndc-msg-sig?data={data}").json()["message"]
 			self.headers["NDC-MSG-SIG"] = signature
 			return signature
 		except:
 			self.generate_signature(data=data)
+	
+	# generate device_Id
+	def generate_device_Id(self, data: str = time.time()):
+		request = requests.get(f"https://ed-server.herokuapp.com/api/generator/ndcdeviceid?data={data}")
+		return request.json()["message"]
 		
-
 	# authorization
 	def auth(self, email: str, password: str):
 		data = {
