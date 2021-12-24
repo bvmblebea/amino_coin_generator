@@ -32,7 +32,7 @@ class Client:
 	
 	def generate_signature(self, data: str):
 		try:
-			signature = requests.get(f"https://ed-server.herokuapp.com/api/generator/ndc-msg-sig?data={data}").json()["message"]
+			signature = requests.get(f"http://aminoed.uk.to/api/generator/ndc-msg-sig?data={data}").json()["message"]
 			self.headers["NDC-MSG-SIG"] = signature
 			return signature
 		except:
@@ -40,7 +40,7 @@ class Client:
 	
 	# generate device_Id
 	def generate_device_Id(self, data: str = time.time()):
-		request = requests.get(f"https://ed-server.herokuapp.com/api/generator/ndcdeviceid?data={data}")
+		request = requests.get(f"http://aminoed.uk.to/api/generator/ndcdeviceid?data={data}")
 		return request.json()["message"]
 		
 	# authorization
