@@ -33,7 +33,7 @@ def generator_main_process(ndc_Id: int, email: str, client: aminoboi.Client):
 
 def generating_process(ndc_Id: int, email: str, client: aminoboi.Client):
 	Thread(target=generator_main_process, args=(ndc_Id, email, client)).start()
-
+	
 def play_lottery(ndc_Id: int, client: aminoboi.Client):
 	try:
 		lottery = client.lottery(ndc_Id=ndc_Id)
@@ -47,6 +47,7 @@ def watch_ad(client: aminoboi.Client):
 		print(f">> Watch Ad - {watch_ad['api:message']}")
 	except Exception as e:
 		print(f">> Error in watch ad - {e}")
+		
 		# -- transfer coins and main function for generating coins -- 
 
 def get_tapjoy_reward(client: aminoboi.Client):
@@ -81,10 +82,9 @@ def main_process():
     	try:
     		client = aminoboi.Client()
     		auth(email=email, password=password, client=client)
-    		play_lottery(ndc_Id=ndc_Id, client=client); watch_ad(client=client); get_tapjoy_reward(client=client)
+    		play_lottery(ndc_Id=ndc_Id, client=client); watch_ad(client=client); #get_tapjoy_reward(client=client)
     		with ThreadPoolExecutor(max_workers=100) as executor: 
     			_ = [executor.submit(generating_process(ndc_Id, email, client)) for _ in range(25)]
-    		print(f"-- Finished Generating Coins In {email}")
     	except Exception as e:
     		print(f">> Error in main process - {e}")
 
@@ -93,13 +93,13 @@ def main_process():
 
 def main():
 	print(tabulate(menu_configs.main_menu, tablefmt="psql"))
-	select = input("Select >> ")
+	select = int(input("Select >> "))
 	
-	if select == "1":
+	if select == 1:
 		main_process()
 	
-	elif select == "2":
+	elif select == 2:
 		transfer_coins()
 	
-	elif select == "3":
+	elif select == 3:
 		autoreg_functions.auto_register(password=input("Password For All Accounts >> "))
