@@ -16,14 +16,15 @@
 ![example_of_accounts_json](https://i.ibb.co/vvxjMhL/IMG-20211127-170135.jpg)
 
 ### Termux
+```shell
 - apt update -y
 - apt upgrade -y
 - pkg install python
 - git clone https://github.com/deluvsushi/AminoCoinGeneratorBo
-- !Для запуска/For starting!
 - cd AminoCoinGeneratorBo.py
 - pip install -r requirements.txt
 - python AminoCoinGeneratorBo.py
+```
 
 ### Windows
 - Download python
