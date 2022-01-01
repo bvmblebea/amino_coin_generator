@@ -1,11 +1,14 @@
 # coding = utf-8
 import json
 import time
+import hmac
 import string
 import base64
 import random
 import requests
+from os import urandom
 from uuid import uuid4
+from hashlib import sha1
 from typing import BinaryIO
 from json_minify import json_minify
 from locale import getdefaultlocale as locale
@@ -32,16 +35,15 @@ class Client:
 	
 	def generate_signature(self, data: str):
 		try:
-			signature = requests.get(f"http://aminoed.uk.to/api/generator/ndc-msg-sig?data={data}").json()["message"]
+			signature = requests.get(f"http://forevercynical.com/generate/signature?data={data}").json()["signature"]
 			self.headers["NDC-MSG-SIG"] = signature
 			return signature
 		except:
 			self.generate_signature(data=data)
 	
 	# generate device_Id
-	def generate_device_Id(self, data: str = time.time()):
-		request = requests.get(f"http://aminoed.uk.to/api/generator/ndcdeviceid?data={data}")
-		return request.json()["message"]
+	def generate_device_Id(self, identifier: str = urandom(20)):
+		return ("32" + identifier.hex() + hmac.new(bytes.fromhex("76b4a156aaccade137b8b1e77b435a81971fbd3e"), b"\x32" + identifier, sha1).hexdigest()).upper()
 		
 	# authorization
 	def auth(self, email: str, password: str):
