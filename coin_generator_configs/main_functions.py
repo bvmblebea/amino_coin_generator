@@ -17,6 +17,7 @@ with open("accounts.json") as data:
 		
 def auth(email: str, password: str, client: aminoboi.Client):
 	try:
+		print(f">> deviceID -- {client.device_Id}")
 		client.auth(email=email, password=password)
 		print(f">> Logged in {email}...")
 	except Exception as e:
@@ -78,9 +79,9 @@ def main_process():
     link_Info = aminoboi.Client().get_from_link(input("Community Link >> "))
     ndc_Id = link_Info["linkInfoV2"]["extensions"]["community"]["ndcId"]
     for account in accounts:
+    	client = aminoboi.Client()
     	email = account["email"]; password = account["password"]
     	try:
-    		client = aminoboi.Client()
     		auth(email=email, password=password, client=client)
     		play_lottery(ndc_Id=ndc_Id, client=client); watch_ad(client=client); #get_tapjoy_reward(client=client)
     		with ThreadPoolExecutor(max_workers=100) as executor: 
