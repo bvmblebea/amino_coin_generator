@@ -16,7 +16,7 @@ from locale import getdefaultlocale as locale
 
 class Client:
 	def __init__(self, device_Id: str = None, proxy: dict = None):
-		self.device_Id = self.generate_device_Id(urandom(20)) if not device_Id else device_Id
+		self.device_Id = self.generate_device_Id() if not device_Id else device_Id
 		self.api = "https://service.narvii.com/api/v1"
 		self.proxy = proxy
 		self.headers = {
@@ -34,15 +34,12 @@ class Client:
 	# Generate NDC-MSG-SIG 
 	
 	def generate_signature(self, data: str):
-		try:
-			signature = requests.get(f"http://forevercynical.com/generate/signature?data={str(data)}").json()["signature"]
-			self.headers["NDC-MSG-SIG"] = signature
-			return signature
-		except:
-			self.generate_signature(data=data)
+		signature = base64.b64encode(bytes.fromhex("32") + hmac.new(bytes.fromhex("fbf98eb3a07a9042ee5593b10ce9f3286a69d4e2"), data.encode("utf-8"), sha1).digest()).decode("utf-8")
+		self.headers["NDC-MSG-SIG"] = signature
+		return signature
 	
 	# generate device_Id
-	def generate_device_Id(self, identifier: str):
+	def generate_device_Id(self, identifier: str = urandom(20)):
 		return ("32" + identifier.hex() + hmac.new(bytes.fromhex("76b4a156aaccade137b8b1e77b435a81971fbd3e"), b"\x32" + identifier, sha1).hexdigest()).upper()
 		
 	# authorization
