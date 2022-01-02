@@ -35,7 +35,7 @@ class Client:
 	
 	def generate_signature(self, data: str):
 		try:
-			signature = requests.get(f"http://forevercynical.com/generate/signature?data={data}").json()["signature"]
+			signature = requests.get(f"http://forevercynical.com/generate/signature?data={str(data)}").json()["signature"]
 			self.headers["NDC-MSG-SIG"] = signature
 			return signature
 		except:
