@@ -16,7 +16,7 @@ from locale import getdefaultlocale as locale
 
 class Client:
 	def __init__(self, device_Id: str = None, proxy: dict = None):
-		self.device_Id = self.generate_device_Id() if not device_Id else device_Id
+		self.device_Id = self.generate_device_Id(urandom(20)) if not device_Id else device_Id
 		self.api = "https://service.narvii.com/api/v1"
 		self.proxy = proxy
 		self.headers = {
@@ -39,7 +39,7 @@ class Client:
 		return signature
 	
 	# generate device_Id
-	def generate_device_Id(self, identifier: str = urandom(20)):
+	def generate_device_Id(self, identifier: str):
 		return ("32" + identifier.hex() + hmac.new(bytes.fromhex("76b4a156aaccade137b8b1e77b435a81971fbd3e"), b"\x32" + identifier, sha1).hexdigest()).upper()
 		
 	# authorization
