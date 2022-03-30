@@ -1,7 +1,6 @@
 <body>
-	<h1 align="center"> AminoCoinGeneratorBo </h1>
-	<br>
-	<h2 align="center"> AminoCoinGeneratorBo this is a coin generator for amino mobile social network </h2>
+	<h2 align="center"> AminoCoinGeneratorBo </h1>
+	<h3 align="center"> AminoCoinGeneratorBo this is a coin generator for amino mobile social network </h2>
 	<div>
 		<h3 align="center"> Using: </h3>
 		<details>
