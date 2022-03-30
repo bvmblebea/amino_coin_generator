@@ -1,6 +1,7 @@
 <body>
-	<h2 align="center"> AminoCoinGeneratorBo </h1>
-	<h3 align="center"> AminoCoinGeneratorBo this is a coin generator for amino mobile social network </h2>
+	<h1 align="center"> AminoCoinGeneratorBo </h1>
+	<br>
+	<h2 align="center"> AminoCoinGeneratorBo this is a coin generator for amino mobile social network </h2>
 	<div>
 		<h3 align="center"> Using: </h3>
 		<details>
@@ -41,6 +42,7 @@
 			<li> pip install -r requirements.txt </li>
 			<li> python AminoCoinGeneratorBo.py </li>
 		</ol>
+		<br>
 		<h3 align="center"> Windows: </h3>
 		<ol>
 			<li> Download <a href="https://www.python.org/"> Python </a></li>
