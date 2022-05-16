@@ -1,8 +1,8 @@
 <body>
 	<h2 align="center"> AminoCoinGeneratorBo </h1>
-	<h3 align="center"> AminoCoinGeneratorBo this is a coin generator for amino mobile social network </h2>
+	<h4 align="center"> This is a coin generator for amino mobile social network </h2>
 	<div>
-		<h3 align="center"> Using: </h3>
+		<h4 align="center"> Using: </h3>
 		<details>
 			<summary><b>RU</b></summary>
 			<table>
@@ -31,7 +31,7 @@
 	</div>
 	<br>
 	<div>
-		<h3 align="center"> Termux: </h3>
+		<h5 align="center"> Termux: </h3>
 		<ol>
 			<li> apt update -y </li>
 			<li> apt upgrade -y </li>
@@ -42,7 +42,7 @@
 			<li> python AminoCoinGeneratorBo.py </li>
 		</ol>
 		<br>
-		<h3 align="center"> Windows: </h3>
+		<h5 align="center"> Windows: </h3>
 		<ol>
 			<li> Download <a href="https://www.python.org/"> Python </a></li>
 			<li> Enter the commands into cmd </li>
