@@ -24,7 +24,7 @@ class Client:
 		"NDCDEVICEID": self.device_id,
 		"Accept-Language": "en-EN",
 		"Content-Type": "application/json; charset=utf-8",
-		"User-Agent": "Dalvik/2.1.0 (Linux; U; Android 9.1.1; SM-G973N Build/beyond1qlteue-user 5; com.narvii.amino.master/3.5.34180)", 
+		"User-Agent": "Dalvik/2.1.0 (Linux; U; Android 11; RMX2086 Build/RMX2086_11_C.12; com.narvii.amino.master/3.5.34191)", 
 		"Host": "service.narvii.com",
 		"Accept-Encoding": "gzip",
 		"Connection": "Keep-Alive"
