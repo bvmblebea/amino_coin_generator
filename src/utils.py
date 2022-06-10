@@ -32,7 +32,7 @@ def coin_generator(client: amino.Client, ndc_id: int, email: str):
 	timers = [get_timers() for _ in range(50)]
 	client.send_active_object(ndc_id=ndc_id, timers=timers)
 	print(f"[Generating coins in]::: {email}")
-	time.sleep(5)
+	sleep(5)
 
 
 def generate_coins(client: amino.Client, ndc_id: int, email: str):
