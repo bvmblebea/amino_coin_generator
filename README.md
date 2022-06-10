@@ -1,6 +1,6 @@
 <body>
 	<h2 align="center"> AminoCoinGeneratorBo </h1>
-	Coin generator for amino social network
+	<align="center"> Coin generator for amino social network
 	<div>
 		<h4 align="center"> Using: </h3>
 		<table>
