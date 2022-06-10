@@ -26,8 +26,8 @@ apt upgrade -y
 pkg install python 
 git clone https://github.com/deluvsushi/AminoCoinGeneratorBo 
 cd AminoCoinGeneratorBo 
-pip install -r requirements.txt 
-python AminoCoinGeneratorBo.py 
+pip install tabulate
+python main.py 
 ```
 
 ### Windows:
