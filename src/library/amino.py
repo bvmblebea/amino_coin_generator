@@ -1,16 +1,18 @@
 # coding = utf-8
 import requests
-
 from hmac import new
+from time import time
 from os import urandom
+from json import dumps
+from json import loads
 from uuid import uuid4
 from hashlib import sha1
+from time import timezone
 from typing import BinaryIO
-from json import dumps, loads
-from time import time, timezone
+from base64 import b64encode
+from base64 import b64decode
 from json_minify import json_minify
 from websocket import create_connection
-from base64 import b64encode, b64decode
 from locale import getdefaultlocale as locale
 
 class Client:
@@ -22,7 +24,7 @@ class Client:
 		self.device_id = self.generate_device_id(urandom(20)) if not device_id else device_id
 		self.headers = {
 		"NDCDEVICEID": self.device_id,
-		"Accept-Language": "en-EN",
+		"Accept-Language": "en-US",
 		"Content-Type": "application/json; charset=utf-8",
 		"User-Agent": "Dalvik/2.1.0 (Linux; U; Android 11; RMX2086 Build/RMX2086_11_C.12; com.narvii.amino.master/3.5.34191)", 
 		"Host": "service.narvii.com",
@@ -31,8 +33,9 @@ class Client:
 		}
 
 	def generate_signature(self, data: str):
-		self.headers["NDC-MSG-SIG"] = b64encode(bytes.fromhex("42") + new(bytes.fromhex("f8e7a61ac3f725941e3ac7cae2d688be97f30b93"), data.encode("utf-8"), sha1).digest()).decode("utf-8")
-		return self.headers["NDC-MSG-SIG"]
+		signature = b64encode(bytes.fromhex("42") + new(bytes.fromhex("f8e7a61ac3f725941e3ac7cae2d688be97f30b93"), data.encode("utf-8"), sha1).digest()).decode("utf-8")
+		self.headers["NDC-MSG-SIG"] = signature
+		return signature
 	
 	def generate_device_id(self, identifier: str):
 		return ("42" + identifier.hex() + new(bytes.fromhex("02b258c63559d8804321c5d5065af320358d366f"), b"\x42" + identifier, sha1).hexdigest()).upper()
@@ -71,11 +74,7 @@ class Client:
 	def send_active_object(self, ndc_id: int, start_time: int = None, end_time: int = None, timers: list = None):
 		data = {
 		"userActiveTimeChunkList": [
-		{
-		"start": start_time,
-		"end": end_time
-		}
-		],
+		{"start": start_time, "end": end_time}],
 		"timestamp": int(time() * 1000),
 		"optInAdsFlags": 2147483647,
 		"timezone": -timezone // 1000
