@@ -28,15 +28,15 @@ def get_timers():
 	return {"start": int(time()), "end": int(time()) + 300}
 
 
-def coin_generator(client: amino.Client, ndc_id: int, email: str):
+def coin_generator(client: amino.Client, ndc_id: int, email: str, delay: int):
 	timers = [get_timers() for _ in range(50)]
 	client.send_active_object(ndc_id=ndc_id, timers=timers)
 	print(f"[Generating coins in]::: {email}")
-	sleep(5)
+	sleep(delay)
 
 
-def generate_coins(client: amino.Client, ndc_id: int, email: str):
-	Thread(target=coin_generator, args=(client, ndc_id, email)).start()
+def generate_coins(client: amino.Client, ndc_id: int, email: str, delay: int):
+	Thread(target=coin_generator, args=(client, ndc_id, email, delay)).start()
 	
 	
 def play_lottery(client: amino.Client, ndc_id: int):
@@ -85,6 +85,7 @@ def transfer_coins():
 def main_process():
 	ndc_id = amino.Client().get_from_code(
 		input("[Community link]::: "))["linkInfoV2"]["extensions"]["community"]["ndcId"]
+	delay = int(input("[Generation delay in seconds]::: "))
 	for account in accounts:
 		client = amino.Client()
 		email = account["email"]
@@ -94,6 +95,6 @@ def main_process():
 			play_lottery(client=client, ndc_id=ndc_id)
 			watch_ad(client=client)
 			with ThreadPoolExecutor(max_workers=100) as executor: 
-				[executor.submit(generate_coins(client, ndc_id, email)) for _ in range(25)]
+				[executor.submit(generate_coins(client, ndc_id, email, delay)) for _ in range(25)]
 		except Exception as e:
 			print(f"[Error in main process]::: {e}")
