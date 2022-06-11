@@ -32,7 +32,6 @@ def coin_generator(client: amino.Client, ndc_id: int, email: str, delay: int):
 	timers = [get_timers() for _ in range(50)]
 	client.send_active_object(ndc_id=ndc_id, timers=timers)
 	print(f"[Generating coins in]::: {email}")
-	sleep(delay)
 
 
 def generate_coins(client: amino.Client, ndc_id: int, email: str, delay: int):
@@ -60,11 +59,12 @@ def transfer_coins():
 		input("[Blog link]::: "))["linkInfoV2"]["extensions"]["linkInfo"]
 	ndc_id = link_Info["ndcId"]
 	blog_id = link_Info["objectId"]
+	delay = int(input("[Transfer delay in seconds]::: "))
 	for account in accounts:
+		client = amino.Client()
 		email = account["email"]
 		password = account["password"]
 		try:
-			client = amino.Client()
 			login(client=client, email=email, password=password)
 			client.join_community(ndc_id=ndc_id)
 			total_coins = client.get_wallet_info()["wallet"]["totalCoins"]
@@ -78,6 +78,7 @@ def transfer_coins():
 				transfer = client.send_coins_blog(
 					ndc_id=ndc_id, blog_Id=blog_id, coins=total_coins)["api:message"]
 				print(f"[{email} sent]::: {total_coins} coins - {transfer}")
+			sleep(delay)
 		except Exception as e:
 			print(f"[Error in transfer coins]::: {e}")
 
@@ -96,5 +97,6 @@ def main_process():
 			watch_ad(client=client)
 			with ThreadPoolExecutor(max_workers=100) as executor: 
 				[executor.submit(generate_coins(client, ndc_id, email, delay)) for _ in range(25)]
+			sleep(delay)
 		except Exception as e:
 			print(f"[Error in main process]::: {e}")
