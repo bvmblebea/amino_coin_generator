@@ -57,8 +57,8 @@ def watch_ad(client: amino.Client):
 def transfer_coins():
 	link_info = amino.Client().get_from_code(
 		input("[Blog link]::: "))["linkInfoV2"]["extensions"]["linkInfo"]
-	ndc_id = link_Info["ndcId"]
-	blog_id = link_Info["objectId"]
+	ndc_id = link_info["ndcId"]
+	blog_id = link_info["objectId"]
 	delay = int(input("[Transfer delay in seconds]::: "))
 	for account in accounts:
 		client = amino.Client()
