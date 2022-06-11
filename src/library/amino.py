@@ -34,7 +34,7 @@ class Client:
 
 	def generate_signature(self, data: str):
 		signature = b64encode(bytes.fromhex("42") + new(bytes.fromhex("f8e7a61ac3f725941e3ac7cae2d688be97f30b93"), data.encode("utf-8"), sha1).digest()).decode("utf-8")
-		self.headers["NDC-MSG-SIG"] = signature
+		self.headers["ndc-msg-sig"] = signature
 		return signature
 	
 	def generate_device_id(self, identifier: str):
