@@ -20,15 +20,13 @@
 </body>
 
 ### Termux:
-```shell
-apt update -y
-apt upgrade -y 
-pkg install python 
-git clone https://github.com/deluvsushi/AminoCoinGeneratorBo 
-cd AminoCoinGeneratorBo 
-pip install tabulate
-python main.py 
-```
+<kbd> apt update -y </kbd>
+<kbd> apt upgrade -y </kbd>
+<kbd> pkg install python </kbd>
+<kbd> git clone https://github.com/deluvsushi/AminoCoinGeneratorBo </kbd>
+<kbd> cd AminoCoinGeneratorBo </kbd>
+<kbd> pip install tabulate </kbd>
+<kbd> python main.py </kbd>
 
 ### Windows:
 ```
