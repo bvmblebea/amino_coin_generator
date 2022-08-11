@@ -1,7 +1,7 @@
 <body>
 	<h2 align="center"> Coin generator for amino social network </h2>
 	<div>
-		<h4 align="center"> Using: </h4>
+		<h4 align="center"> Using </h4>
 		<table>
 			<tr> <th colspan="2">Instruction</th> </tr>
 			<tr>
@@ -19,6 +19,7 @@
 				</th>
 			</tr>
 		</table>
+	<h4 align="center"> Installing </h4>
 	<div>
 		<h3> Termux </h3>
 		<kbd> apt update -y </kbd> <br>
