@@ -3,10 +3,10 @@ import requests
 
 from hmac import new
 from os import urandom
-from json import loads
 from uuid import uuid4
 from hashlib import sha1
 from typing import BinaryIO
+from json import loads, dumps
 from time import time, timezone
 from json_minify import json_minify
 from websocket import create_connection
@@ -52,14 +52,14 @@ class Amino:
 		self.ws = create_connection(f"wss://ws1.narvii.com?signbody={data}".replace("|", "%7C"), header=self.ws_headers)
   
 	def login(self, email: str, password: str, socket: bool = True):
-		data = {
+		data = dumps({
 			"email": email,
 			"secret": f"0 {password}",
 			"deviceID": self.device_id,
 			"clientType": 100,
 			"action": "normal",
 			"timestamp": int(time() * 1000)
-		}
+		})
 		self.generate_signature(data)
 		response = requests.post(
 			f"{self.api}/g/s/auth/login",
@@ -93,7 +93,7 @@ class Amino:
 		}
 		if timers:
 			data["userActiveTimeChunkList"] = timers
-		data = json_minify(data)
+		data = json_minify(dumps(data))
 		self.generate_signature(data)
 		return requests.post(
 			f"{self.api}/x{ndc_id}/s/community/stats/user-active-time",
@@ -101,15 +101,25 @@ class Amino:
 			headers=self.headers,
 			proxies=self.proxies).json()
 
-	def request_verify_code(self, email: str, reset_password: bool = False):
+	def request_verify_code(
+			self, 
+			phone_number: str = None,
+			email: str = None,
+			reset_password: bool = False):
 		data = {
-			"identity": email,
-			"type": 1,
-			"deviceID": self.device_id
+			"deviceID": self.device_id,
+			"timestamp": int(time() * 1000)
 		}
+		if email:
+			data["identity"] = email
+			data["type"] = 1
 		if reset_password:
 			data["level"] = 2
 			data["purpose"] = "reset-password"
+		elif phone_number:
+			data["identity"] = phone_number
+			data["type"] = 8
+		data = dumps(data)
 		self.generate_signature(data)
 		return requests.post(
 			f"{self.api}/g/s/auth/request-security-validation",
@@ -125,7 +135,7 @@ class Amino:
 			password: str,
 			device_id: str,
 			verification_code: int):
-		data = {
+		data = dumps({
 			"secret": f"0 {password}",
 			"deviceID": device_id,
 			"email": email,
@@ -145,7 +155,7 @@ class Amino:
 			"type": 1,
 			"identity": email,
 			"timestamp": int(time() * 1000)
-		}
+		})
 		self.generate_signature(data)
 		return requests.post(
 			f"{self.api}/g/s/auth/register",
@@ -160,9 +170,9 @@ class Amino:
 			proxies=self.proxies).json()  
 
 	def accept_host(self, ndc_id: int, chat_id: str):
-		data = {
+		data = dumps({
 			"timestamp": int(time() * 1000)
-		}
+		})
 		self.generate_signature(data)
 		return requests.post(
 			f"{self.api}/x{ndc_id}/s/chat/thread/{chat_id}/accept-organizer",
@@ -177,7 +187,7 @@ class Amino:
 			proxies=self.proxies).json() 
 		 
 	def check_device_id(self, device_id: str):
-		data = {
+		data = dumps({
 			"deviceID": device_id,
 			"bundleID": "com.narvii.amino.master",
 			"clientType": 100,
@@ -185,7 +195,7 @@ class Amino:
 			"systemPushEnabled": True,
 			"locale": locale()[0],
 			"timestamp": int(time() * 1000)
-		}
+		})
 		self.generate_signature(data)
 		return requests.post(
 			f"{self.api}/g/s/device",
@@ -222,10 +232,10 @@ class Amino:
 			ndc_id: int,
 			chat_id: str,
 			user_ids: list):
-		data = {
+		data = dumps({
 			"uidList": user_ids,
 			"timestamp": int(time() * 1000)
-		}
+		})
 		self.generate_signature(data)
 		return requests.post(
 			f"{self.api}/x{ndc_id}/s/chat/thread/{chat_id}/transfer-organizer",
@@ -261,7 +271,7 @@ class Amino:
 			ndc_id: int,
 			chat_id: str):
 		audio = b64encode(open(path, "rb").read())
-		data = {
+		data = dumps({
 			"content": None,
 			"type": 2,
 			"clientRefId": int(time() / 10 % 1000000000),
@@ -269,7 +279,7 @@ class Amino:
 			"mediaType":110,
 			"mediaUploadValue": audio,
 			"attachedObject": None
-		}
+		})
 		self.generate_signature(data)
 		return requests.post(
 			f"{self.api}/x{ndc_id}/s/chat/thread/{chat_id}/message",
@@ -283,13 +293,13 @@ class Amino:
 			user_id: str,
 			reason: str,
 			ban_type: int = None):
-		data = {
+		data = dumps({
 			"reasonType": ban_type,
 			"note": {
 				"content": reason 
 			},
 			"timestamp": int(time() * 1000)
-		}
+		})
 		self.generate_signature(data)
 		return requests.post(
 			f"{self.api}/x{ndc_id}/s/user-profile/{user_id}/ban",
@@ -308,12 +318,12 @@ class Amino:
 			ndc_id: int,
 			user_id: str,
 			reason: str):
-		data = {
+		data = dumps({
 			"note": { 
 				"content": reason 
 			},
 			"timestamp": int(time() * 1000)
-		}
+		})
 		self.generate_signature(data)
 		return requests.post(
 			f"{self.api}/x{ndc_id}/s/user-profile/{user_id}/unban",
@@ -326,12 +336,12 @@ class Amino:
 			ndc_id: int,
 			message: str,
 			user_id: str):
-		data = {
+		data = dumps({
 			"inviteeUids": [user_id],
 			"initialMessageContent": message,
 			"type": 0,
 			"timestamp": int(time() * 1000)
-		}
+		})
 		self.generate_signature(data)
 		return requests.post(
 			f"{self.api}/x{ndc_id}/s/chat/thread",
@@ -346,11 +356,11 @@ class Amino:
 			message_id: str,
 			reason: str = None,
 			asStaff: bool = False):
-		data = {
+		data = dumps({
 			"adminOpName": 102,
 			"adminOpNote": {"content": reason},
 			"timestamp": int(time() * 1000)
-		}
+		})
 		self.generate_signature(data)
 		if asStaff:
 			return requests.delete(
@@ -380,13 +390,13 @@ class Amino:
 			ndc_id: int,
 			name: str,
 			stickers: list):
-		data = {
+		data = dumps({
 			"collectionType": 3,
 			"description": "sticker_pack",
 			"iconSourceStickerIndex": 0,
 			"name": name, "stickerList": stickers,
 			"timestamp": int(time() * 1000)
-		}
+		})
 		self.generate_signature(data)
 		return requests.post(
 			f"{self.api}/x{ndc_id}/s/sticker-collection",
@@ -405,10 +415,10 @@ class Amino:
 			ndc_id: int,
 			chat_id: str,
 			permission: int):
-		data = {
+		data = dumps({
 			"vvChatJoinType": permission,
 			"timestamp": int(time() * 1000)
-		}
+		})
 		self.generate_signature(data)
 		return requests.post(
 			f"{self.api}/x{ndc_id}/s/chat/thread/{chat_id}/vvchat-permission",
@@ -425,7 +435,7 @@ class Amino:
 			embed_content: str = None,
 			link: str = None,
 			embed_image: BinaryIO = None):
-		data = {
+		data = dumps({
 			"type": 0,
 			"content": message,
 			"clientRefId": int(time() / 10 % 1000000000),
@@ -436,12 +446,12 @@ class Amino:
 				"title": embed_title,
 				"content": embed_content,
 				"mediaList": embed_image
-				},
-				"extensions": {
-					"mentionedArray": None
-				},
-				"timestamp": int(time() * 1000)
-		}
+			},
+			"extensions": {
+				"mentionedArray": None
+			},
+			"timestamp": int(time() * 1000)
+		})
 		self.generate_signature(data)
 		return requests.post(
 			f"{self.api}/x{ndc_id}/s/chat/thread/{chat_id}/message",
@@ -457,13 +467,13 @@ class Amino:
 			message_type: int = 0,
 			reply_message_id: str = None,
 			notification : list = None):
-		data = {
+		data = dumps({
 			"content": message,
 			"type": message_type,
 			"clientRefId": int(time() / 10 % 1000000000),
 			"mentionedArray": [notification], 
 			"timestamp": int(time() * 1000)
-		}
+		})
 		self.generate_signature(data)
 		if reply_message_id:
 			data["replyMessageId"] = reply_message_id
@@ -535,7 +545,7 @@ class Amino:
 			ndc_id: int,
 			chat_id: str,
 			image: str):
-		data = {
+		data = dumps({
 			"type": 0,
 			"clientRefId": int(time() / 10 % 1000000000),
 			"timestamp": int(time() * 1000),
@@ -543,7 +553,7 @@ class Amino:
 			"mediaUploadValueContentType": "image/jpg", 
 			"mediaUhqEnabled": False, 
 			"attachedObject": None
-		}
+		})
 		self.generate_signature(data)
 		return requests.post(
 			f"{self.api}/x{ndc_id}/s/chat/thread/{chat_id}/message",
@@ -552,9 +562,9 @@ class Amino:
 			proxies=self.proxies).json() 
 		 
 	def join_community(self, ndc_id: int, invitation_id: str = None):
-		data = {
+		data = dumps({
 			"timestamp": int(time() * 1000)
-		}
+		})
 		if invitation_id:
 			data["invitationId"] = invitation_id
 		self.generate_signature(data)
@@ -573,10 +583,10 @@ class Amino:
 			user_ids = [user_id]
 		elif isinstance(user_id, list):
 			user_ids = user_id
-		data = {
+		data = dumps({
 			"uids": user_ids,
 			"timestamp": int(time() * 1000)
-		}
+		})
 		self.generate_signature(data)
 		return requests.post(
 			f"{self.api}/x{ndc_id}/s/chat/thread/{chat_id}/member/invite",
@@ -611,7 +621,7 @@ class Amino:
 			proxies=self.proxies).json() 
 		
 	def send_gif(self, ndc_id: int, chat_id: str, gif: str):
-		data = {
+		data = dumps({
 			"type": 0,
 			"clientRefId": int(time() / 10 % 1000000000),
 			"timestamp": int(time() * 1000), 
@@ -620,7 +630,7 @@ class Amino:
 			"mediaUploadValueContentType": "image/gif",
 			"mediaUhqEnabled": False,
 			"attachedObject": None
-		}
+		})
 		self.generate_signature(data)
 		return requests.post(
 			f"{self.api}/x{ndc_id}/s/chat/thread/{chat_id}/message",
@@ -633,12 +643,12 @@ class Amino:
 			ndc_id: int,
 			content: str,
 			user_id: str):
-		data = {
+		data = dumps({
 			"content": content,
 			"mediaList": [], 
 			"eventSource": "PostDetailView", 
 			"timestamp": int(time() * 1000)
-		}
+		})
 		self.generate_signature(data)
 		return requests.post(
 			f"{self.api}/x{ndc_id}/s/user-profile/{user_id}/comment",
@@ -673,10 +683,10 @@ class Amino:
 			self,
 			ndc_id: int = 0,
 			time_zone: int = -int(timezone) // 1000):
-		data = {
+		data = dumps({
 			"timezone": time_zone,
 			"timestamp": int(time() * 1000)
-		}
+		})
 		self.generate_signature(data)
 		return requests.post(
 			f"{self.api}/x{ndc_id}/s/check-in",
@@ -690,13 +700,13 @@ class Amino:
 			blog_id: str = None, 
 			coins: int = None,
 			transaction_id: str = uuid4()):
-		data = {
+		data = dumps({
 			"coins": coins,
 			"tippingContext": {
 				"transactionId": transaction_id
 			},
 			"timestamp": int(time() * 1000)
-		}
+		})
 		self.generate_signature(data)
 		return requests.post(
 			f"{self.api}/x{ndc_id}/s/blog/{blog_id}/tipping",
@@ -710,13 +720,13 @@ class Amino:
 			chat_id: str = None,
 			coins: int = None,
 			transaction_id: str = uuid4()):
-		data = {
+		data = dumps({
 			"coins": coins,
 			"tippingContext": {
 				"transactionId": transaction_id
 			},
 			"timestamp": int(time() * 1000)
-		}
+		})
 		self.generate_signature(data)
 		return requests.post(
 			f"{self.api}/x{ndc_id}/s/chat/thread/{chat_id}/tipping",
@@ -728,10 +738,10 @@ class Amino:
 			self,
 			ndc_id: int,
 			time_zone: str = -int(timezone) // 1000):
-		data = {
+		data = dumps({
 			"timezone": time_zone,
 			"timestamp": int(time() * 1000)
-		}
+		})
 		self.generate_signature(data)
 		return requests.post(
 			f"{self.api}/x{ndc_id}/s/check-in/lottery",
@@ -762,6 +772,7 @@ class Amino:
 			data["content"] = content
 		if title:
 			data["title"] = title
+		data = dumps(data)
 		generate_signature(data)
 		response.append(requests.post(
 		 	f"{self.api}/x{ndc_id}/s/chat/thread/{chat_id}",
@@ -834,12 +845,12 @@ class Amino:
 			proxies=self.proxies).json() 
 		 
 	def buy_bubble(self, ndc_id: int, bubble_id: str):
-		data = {
+		data = dumps({
 			"objectId": bubble_id,
 			"objectType": 116,
 			"v": 1,
 			"timestamp": int(time() * 1000)
-		}
+		})
 		self.generate_signature(data)
 		return requests.post(
 			f"{self.api}/x{ndc_id}/s/store/purchase", 
@@ -852,9 +863,9 @@ class Amino:
 			ndc_id: int,
 			chat_id: str,
 			user_id: str):
-		data = {
+		data = dumps({
 			"uid": user_id
-		}
+		})
 		self.generate_signature(data)
 		return requests.post(
 			f"{self.api}/x{ndc_id}/s/chat/thread/{chat_id}/vvchat-presenter/invite", 
@@ -909,9 +920,9 @@ class Amino:
 					{
 						"title": titles,
 						"color": colors
-					}
-				)
+					})
 			data["extensions"] = {"customTitles": titles_colors}
+		data = dumps(data)
 		self.generate_signature(data)
 		return requests.post(
 			f"{self.api}/x{ndc_id}/s/user-profile/{self.user_id}",
@@ -920,14 +931,14 @@ class Amino:
 			proxies=self.proxies).json()
 		 
 	def activate_account(self, email: str, verification_code: str):
-		data = {
+		data = dumps({
 			"type": 1,
 			"identity": email,
 			"data": {
 				"code": verification_codE
 			},
 			"deviceID": self.device_id
-		}
+		})
 		self.generate_signature(data)
 		return requests.post(
 			f"{self.api}/g/s/auth/activate-email",
@@ -946,11 +957,11 @@ class Amino:
 			proxies=self.proxies).json()
 	
 	def like_blog(self, ndc_id: int, blog_id: str):
-		data = {
+		data = dumps({
 			"value": 4,
 			"eventSource": "UserProfileView",
 			"timestamp": int(time() * 1000)
-		}
+		})
 		self.generate_signature(data)
 		return requests.post(
 			f"{self.api}/x{ndc_id}/s/blog/{blog_id}/vote?cv=1.2",
@@ -1033,11 +1044,11 @@ class Amino:
 	
 	# 1 = online, 2 = offline
 	def set_activity_status(self, ndc_id: int, status: int = 1):
-		data = {
+		data = dumps({
 			"onlineStatus": status,
 			"duration": 86400,
 			"timestamp": int(time() * 1000)
-		}
+		})
 		self.generate_signature(data)
 		return requests.post(
 			f"{self.api}/x{ndc_id}/s/user-profile/{self.user_id}/online-status",
@@ -1067,12 +1078,12 @@ class Amino:
 				continue
 
 	def change_password(self, password: str, new_password: str):
-		data = {
+		data = dumps({
 			"secret": f"0 {password}",
 			"updateSecret": f"0 {newPassword}",
 			"validationContext": None,
 			"deviceID": self.device_id
-		}
+		})
 		self.generate_signature(data)
 		return requests.post(
 			f"{self.api}/g/s/auth/change-password",
@@ -1118,6 +1129,7 @@ class Amino:
 			data["extensions"] = {"style": {"backgroundColor": background_color}}
 		if categories_list:
 			data["taggedBlogCategoryIdList"] = categories_list
+		data = dumps(data)
 		self.generate_signature(data)
 		return requests.post(
 			f"{self.api}/x{ndc_id}/s/blog",
@@ -1137,16 +1149,48 @@ class Amino:
 		elif wiki_id:
 			ref_object_id = wiki_id,
 			ref_object_type = 2
-		data = {
+		data = dumps({
 			"content": content,
 			"refObjectId": ref_object_id,
 			"refObjectType": ref_object_type,
 			"type": 2,
 			"timestamp": int(time() * 1000)
-		}
+		})
 		self.generate_signature(data)
 		return requests.post(
 			f"{self.api}/x{ndc_id}/s/blog",
 			data=data, 
 			headers=self.headers, 
+			proxies=self.proxies).json()
+
+	def register_phone(
+			self,
+			phone_number: str,
+			nickname: str,
+			password: str,
+			device_id: str,
+			verification_code: int):
+		data = dumps({
+			"secret": f"0 {password}",
+			"deviceID": device_id,
+			"clientType": 100,
+			"nickname": nickname,
+			"latitude": 0,
+			"longitude": 0,
+			"address": None,
+			"clientCallbackURL": "narviiapp://relogin",
+			"validationContext": {
+				"data": {
+					"code": verification_code
+				},
+				"type": 8,
+				"identity": phone_number,
+            },
+			"timestamp": int(time() * 1000)
+		})
+		self.generate_signature(data)
+		return requests.post(
+			f"{self.api}/g/s/auth/register",
+			data=data,
+			headers=self.headers,
 			proxies=self.proxies).json()
