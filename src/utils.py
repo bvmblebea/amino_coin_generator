@@ -14,69 +14,93 @@ with open("accounts.json") as database:
 		accounts.append(account)
 
 
-def login(client: amino.Client, email: str, password: str):
+def login(amino: amino.Amino, email: str, password: str):
 	try:
-		print(f"[deviceID]::: {client.device_id}")
-		client.login(
-			email=email, password=password, socket=False)
+		print(f"[deviceID]::: {amino.device_id}")
+		amino.login(
+			email=email,
+			password=password,
+			socket=False)
 		print(f"[Logged in]::: {email}")
 	except Exception as e:
 		print(f"[Error in login]::: {e}")
         
         
 def get_timers():
-	return {"start": int(time()), "end": int(time()) + 300}
+	return {
+		"start": int(time()),
+		"end": int(time()) + 300
+	}
 
-
-def coin_generator(client: amino.Client, ndc_id: int, email: str, delay: int):
-	timers = [get_timers() for _ in range(50)]
-	client.send_active_object(ndc_id=ndc_id, timers=timers)
+def coin_generator(
+		amino: amino.Amino,
+		ndc_id: int,
+		email: str,
+		delay: int):
+	timers = [
+		get_timers() for _ in range(50)
+	]
+	amino.send_active_object(ndc_id=ndc_id, timers=timers)
 	print(f"[Generating coins in]::: {email}")
 
-
-def generate_coins(client: amino.Client, ndc_id: int, email: str, delay: int):
-	Thread(target=coin_generator, args=(client, ndc_id, email, delay)).start()
+def generate_coins(
+		amino: amino.Amino,
+		ndc_id: int,
+		email: str,
+		delay: int):
+	Thread(
+		target=coin_generator,
+		args=(
+			amino.
+			ndc_id,
+			email,
+			delay)
+		).start()
 	
 	
-def play_lottery(client: amino.Client, ndc_id: int):
+def play_lottery(amino: amino.Amino, ndc_id: int):
 	try:
-		lottery = client.lottery(ndc_id=ndc_id)["api:message"]
+		lottery = amino.lottery(ndc_id=ndc_id)["api:message"]
 		print(f"[Lottery]::: {lottery}")
 	except Exception as e:
 		print(f"[Error in play lottery]::: {e}")
 		
 		
-def watch_ad(client: amino.Client):
+def watch_ad(amino: amino.Amino):
 	try:
-		watch_ad = client.watch_ad()["api:message"]
+		watch_ad = amino.watch_ad()["api:message"]
 		print(f"[Watch ad]::: {watch_ad}")
 	except Exception as e:
 		print(f"[Error in watch ad]::: {e}")
 		
 		
 def transfer_coins():
-	link_info = amino.Client().get_from_code(
+	link_info = amino.Amino().get_from_code(
 		input("[Blog link]::: "))["linkInfoV2"]["extensions"]["linkInfo"]
 	ndc_id = link_info["ndcId"]
 	blog_id = link_info["objectId"]
 	delay = int(input("[Transfer delay in seconds]::: "))
 	for account in accounts:
-		client = amino.Client()
+		amino = amino.Amino()
 		email = account["email"]
 		password = account["password"]
 		try:
-			login(client=client, email=email, password=password)
-			client.join_community(ndc_id=ndc_id)
-			total_coins = client.get_wallet_info()["wallet"]["totalCoins"]
+			login(amino=amino, email=email, password=password)
+			amino.join_community(ndc_id=ndc_id)
+			total_coins = amino.get_wallet_info()["wallet"]["totalCoins"]
 			print(f"[{email} total coins]::: {total_coins}")
 			if total_coins != 0:
-				transfer = client.send_coins_blog(
-					ndc_id=ndc_id, blog_Id=blog_id, coins=total_coins)["api:message"]
+				transfer = amino.send_coins_blog(
+					ndc_id=ndc_id,
+					blog_Id=blog_id,
+					coins=total_coins)["api:message"]
 				print(f"[{email} sent]::: {total_coins} coins - {transfer}")
 			elif total_coins > 500:
 				total_coins = 500
-				transfer = client.send_coins_blog(
-					ndc_id=ndc_id, blog_Id=blog_id, coins=total_coins)["api:message"]
+				transfer = amino.send_coins_blog(
+					ndc_id=ndc_id,
+					blog_Id=blog_id,
+					coins=total_coins)["api:message"]
 				print(f"[{email} sent]::: {total_coins} coins - {transfer}")
 			sleep(delay)
 		except Exception as e:
@@ -84,19 +108,24 @@ def transfer_coins():
 
 
 def main_process():
-	ndc_id = amino.Client().get_from_code(
+	ndc_id = amino.Amino().get_from_code(
 		input("[Community link]::: "))["linkInfoV2"]["extensions"]["community"]["ndcId"]
 	delay = int(input("[Generation delay in seconds]::: "))
 	for account in accounts:
-		client = amino.Client()
+		amino = amino.Amino()
 		email = account["email"]
 		password = account["password"]
 		try:
-			login(client=client, email=email, password=password)
-			play_lottery(client=client, ndc_id=ndc_id)
-			watch_ad(client=client)
+			login(amino=amino, email=email, password=password)
+			watch_ad(amino=amino)
+			play_lottery(amino=amino, ndc_id=ndc_id)
 			with ThreadPoolExecutor(max_workers=100) as executor: 
-				[executor.submit(generate_coins(client, ndc_id, email, delay)) for _ in range(25)]
+				[executor.submit(
+						generate_coins(
+							amino,
+							ndc_id,
+							email, 
+							delay)) for _ in range(25)]
 			sleep(delay)
 		except Exception as e:
 			print(f"[Error in main process]::: {e}")
