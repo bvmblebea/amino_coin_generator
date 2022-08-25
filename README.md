@@ -25,7 +25,7 @@
 		<kbd> apt update -y </kbd> <br>
 		<kbd> apt upgrade -y </kbd> <br>
 		<kbd> pkg install python </kbd> <br>
-		<kbd> git clone https://github.com/deluvsushi/AminoCoinGeneratorBo </kbd> <br>
+		<kbd> git clone https://github.com/zeviel/AminoCoinGeneratorBo </kbd> <br>
 		<kbd> cd AminoCoinGeneratorBo </kbd> <br>
 		<kbd> pip install tabulate </kbd> <br>
 		<kbd> python main.py </kbd> <br>
