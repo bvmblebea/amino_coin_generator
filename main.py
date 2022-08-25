@@ -2,8 +2,8 @@ from src import utils
 from src import configs
 from tabulate import tabulate
 print("""\033[38;5;45m
-Script by deluvsushi
-Github : https://github.com/deluvsushi
+Script by zeviel
+Github : https://github.com/zeviel
                      _              _____      _             
      /\             (_)            / ____|    (_)            
     /  \   _ __ ___  _ _ __   ___ | |     ___  _ _ __        
