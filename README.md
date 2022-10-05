@@ -5,8 +5,8 @@
 		<table>
 			<tr> <th colspan="2">Instruction</th> </tr>
 			<tr>
-				<th>In English</th>
-				<th>In Russian</th>
+				<th>English</th>
+				<th>Russian</th>
 			</tr>
 			<tr>
 				<td> For generating you need accounts. 1 Account = 130+ coins per day. It is necessary that all acounts have one password! Put the emails and password of the accounts in a file accounts.json And Start The Script! You will get the coins in 12 GMT. </td>
@@ -14,7 +14,6 @@
 			</tr>
 			<tr> 
 				<th colspan="2">
-					Example of accounts.json
 					<img src="https://i.ibb.co/vvxjMhL/IMG-20211127-170135.jpg">
 				</th>
 			</tr>
