@@ -19,7 +19,7 @@ Github : https://github.com/zeviel
 print(tabulate(configs.MAIN_MENU, tablefmt="psql"))
 select = int(input("[Select]::: "))
 if select == 1:
-	utils.main_process()
+	utils.start_generator()
 	
 elif select == 2:
 	utils.transfer_coins()
