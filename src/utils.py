@@ -110,7 +110,7 @@ def transfer_coins() -> None:
 			print(f"[Error in transfer coins]::: {e}")
 
 
-def main_process() -> None:
+def start_generator() -> None:
 	ndc_id = amino.Amino().get_from_code(
 		input("[Community link]::: "))["linkInfoV2"]["extensions"]["community"]["ndcId"]
 	delay = int(input("[Generation delay in seconds]::: "))
