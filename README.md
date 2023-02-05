@@ -20,15 +20,15 @@
 	<h4 align="center"> Installing </h4>
 	<h3> Termux </h3>
 	<div>
-		<code> pkg install python </code> <br>
-		<code> <br> pip install tabulate </code> <br>
-		<code> <br> git clone https://github.com/zeviel/AminoCoinGeneratorBo </code> <br>
-		<code> <br> cd AminoCoinGeneratorBo && python main.py </code> <br>
+		<code> pkg install python </code> </br>
+		<code> pip install tabulate </code> </br>
+		<code> git clone https://github.com/zeviel/AminoCoinGeneratorBo </code> </br>
+		<code> cd AminoCoinGeneratorBo && python main.py </code> </br>
 	</div>
 	<div>
 		<h3> Windows </h3>
-		<code> Download <a href="https://www.python.org"> python </a> </code> <br>
-		<code> Enter the commands into cmd </code> <br>
+		<code> Download <a href="https://www.python.org"> python </a> </code> </br>
+		<code> Enter the commands into cmd </code> </br>
 		<code> Start the script </code>
 	</div>
 </body>
