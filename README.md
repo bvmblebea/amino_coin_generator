@@ -7,8 +7,8 @@
 				<th>Russian</th>
 			</tr>
 			<tr>
-				<td> To generate coins you need accounts, 1 account = 130+ coins, emails and password's of accounts needs to be putted in accounts.json, you will get the coins at 12 GMT. </td>
-				<td> Для генерации нужны аккаунты. 1 aккаунт = 130+ монет в день. почты от аккаунтов и пароли должны быть помещены в файл accounts.json создайте его сами. монеты приходят в 12 GMT точнее через один день. </td>
+				<td> To generate coins you need accounts, each account is 130+ coins, emails and password's of accounts needs to be written in accounts.json, you will get the coins at 12 GMT. </td>
+				<td> Для генерации нужны аккаунты. 1 aккаунт это 130+ монет в день. почты от аккаунтов и пароли должны быть написаны в файле accounts.json создайте его сами. монеты приходят в 12 GMT точнее через один день. </td>
 			</tr>
 			<tr>  <th colspan="2">Example of accounts.json</th> </tr>
 			<tr>
