@@ -1,7 +1,5 @@
 <body>
-	<h2 align="center"> Coin generator for amino social network </h2>
 	<div>
-		<h4 align="center"> Using </h4>
 		<table>
 			<tr> <th colspan="2">Instruction</th> </tr>
 			<tr>
@@ -22,13 +20,12 @@
 	<div>
 		<code> pkg install python </code> </br>
 		<code> pip install tabulate </code> </br>
-		<code> git clone https://github.com/zeviel/AminoCoinGeneratorBo </code> </br>
-		<code> cd AminoCoinGeneratorBo && python main.py </code> </br>
+		<code> git clone https://github.com/wh9am1/amino_coin_generator </code> </br>
+		<code> cd amino_coin_generator && python main.py </code> </br>
 	</div>
 	<div>
 		<h3> Windows </h3>
 		<code> Download <a href="https://www.python.org"> python </a> </code> </br>
 		<code> Enter the commands into cmd </code> </br>
-		<code> Start the script </code>
 	</div>
 </body>
