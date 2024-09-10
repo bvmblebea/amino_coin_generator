@@ -18,7 +18,7 @@
 	<div>
 		<code> pkg install python </code> </br>
 		<code> pip install tabulate </code> </br>
-		<code> git clone https://github.com/wh9am1/amino_coin_generator </code> </br>
+		<code> git clone https://github.com/vvh0ame/amino_coin_generator </code> </br>
 		<code> cd amino_coin_generator && python main.py </code> </br>
 	</div>
 	<div>
