@@ -16,14 +16,14 @@
 	<h4 align="center"> Installing </h4>
 	<h3> Termux </h3>
 	<div>
-		<code> pkg install python </code> </br>
-		<code> pip install tabulate </code> </br>
-		<code> git clone https://github.com/vvh0ame/amino_coin_generator </code> </br>
-		<code> cd amino_coin_generator && python main.py </code> </br>
+		pkg install python </br>
+		pip install tabulate </br>
+		git clone https://github.com/bvmblebea/amino_coin_generator </br>
+		cd amino_coin_generator && python main.py </br>
 	</div>
+	<h3> Windows </h3>
 	<div>
-		<h3> Windows </h3>
-		<code> Download <a href="https://www.python.org"> python </a> </code> </br>
-		<code> Enter the commands into cmd </code> </br>
+		Download <a href="https://www.python.org"> python </a> </br>
+		Enter the commands into cmd 
 	</div>
 </body>
