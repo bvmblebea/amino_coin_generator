@@ -74,8 +74,8 @@ def watch_ad(amino: amino.Amino) -> None:
 	except Exception as e:
 		print(f"[Error in watch ad]::: {e}")
 		
-def transfer_coins() -> None:
-	link_info = amino.Amino().get_from_code(
+def transfer_coins(amino: amino.Amino) -> None:
+	link_info = amino.get_from_code(
 		input("[Blog link]::: "))["linkInfoV2"]["extensions"]["linkInfo"]
 	ndc_id = link_info["ndcId"]
 	blog_id = link_info["objectId"]
@@ -110,8 +110,8 @@ def transfer_coins() -> None:
 			print(f"[Error in transfer coins]::: {e}")
 
 
-def start_generator() -> None:
-	ndc_id = amino.Amino().get_from_code(
+def start_generator(amino: amino.Amino) -> None:
+	ndc_id = amino.get_from_code(
 		input("[Community link]::: "))["linkInfoV2"]["extensions"]["community"]["ndcId"]
 	delay = int(input("[Generation delay in seconds]::: "))
 	for account in accounts:
